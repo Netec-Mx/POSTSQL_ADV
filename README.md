@@ -31,7 +31,7 @@ Cada uno de estos laboratorios están diseñados para ofrecerte una experiencia 
 ### - [Práctica 7. Configuración y monitoreo de la base de datos.](./Capítulo7/README.md)
  - ⏱️**Duración estimada**: 30 min.
    
-### - [PRáctica 8. Actualización de la versión mayor de PostgreSQL o upgrade y estadísticas extendidas.](./Capítulo8/README.md)
+### - [Práctica 8. Actualización de la versión mayor de PostgreSQL o upgrade y estadísticas extendidas.](./Capítulo8/README.md)
  - ⏱️**Duración estimada**: 30 min.
    
 ---
