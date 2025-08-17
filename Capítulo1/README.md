@@ -90,32 +90,38 @@ El cliente psql permite administrar y consultar PostgreSQL de forma interactiva.
 ### Objetivo
 Explorar la arquitectura de PostgreSQL y localizar archivos de configuración y directorios de datos.
 ### Requisitos
-•	PostgreSQL instalado y servicio activo.
-•	Acceso a usuario con permisos para consultar vistas del sistema.
+- PostgreSQL instalado y servicio activo.
+- Acceso a usuario con permisos para consultar vistas del sistema.
 ### Pasos
 1.	Acceder a psql como usuario postgres:
     ```bash
     sudo -i -u postgres
     psql
+    ```
 2.	Consultar la ubicación del directorio de datos:
     ```sql
     SHOW data_directory;
+    ```
 3.	Consultar el archivo principal de configuración:
     ```sql
     SHOW config_file;
+    ```
 4.	Consultar archivo de control de accesos (pg_hba.conf):
     ```sql
     SHOW hba_file;
+    ```
 5.	Listar los procesos del servidor:
     ```sql
     SELECT * FROM pg_stat_activity;
 6.	Salir de psql:
     ```sql
     \q
+    ```
 7.	En el sistema operativo, navegar al directorio de datos para confirmar existencia:
     ```bash
     cd $(psql -U postgres -t -c "SHOW data_directory")
     ls -l
+    ```
 #### Explicación
 Estos pasos permiten identificar la estructura de PostgreSQL, archivos críticos de configuración y visualizar la actividad interna del servidor para entender su funcionamiento.
 
