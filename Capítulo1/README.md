@@ -25,20 +25,25 @@ Instalar y configurar PostgreSQL versión 14 en Ubuntu, verificar el correcto fu
 3.	Instalar PostgreSQL 14:
     ```bash
     sudo apt install postgresql-14 -y
+    ```
 4.	Verificar estado del servicio:
     ```bash
     sudo systemctl status postgresql
+    ```
 5.	Acceder al prompt de PostgreSQL como usuario postgres:
     ```bash
     sudo -i -u postgres
     psql
+    ```
 6.	Verificar versión en psql:
     ```sql
     SELECT version();
+    ```
 7.	Salir de psql y cerrar sesión postgres:
     ```sql
     \q
     exit
+    ```
 #### Explicación
 Este laboratorio cubre la instalación desde repositorios oficiales para garantizar estabilidad y actualizaciones. Se verifica el servicio y se accede con el usuario administrador predeterminado.
  
