@@ -15,12 +15,13 @@ Instalar y configurar PostgreSQL versión 14 en Ubuntu, verificar el correcto fu
     ```bash
    sudo apt update
    sudo apt upgrade -y
+    ```
 2.	Agregar repositorio oficial PostgreSQL:
     ```bash
     wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
     sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
     sudo apt update
-
+    ```
 3.	Instalar PostgreSQL 14:
     ```bash
     sudo apt install postgresql-14 -y
