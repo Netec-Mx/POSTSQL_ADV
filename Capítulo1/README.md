@@ -113,6 +113,7 @@ Explorar la arquitectura de PostgreSQL y localizar archivos de configuración y 
 5.	Listar los procesos del servidor:
     ```sql
     SELECT * FROM pg_stat_activity;
+    ```
 6.	Salir de psql:
     ```sql
     \q
@@ -129,20 +130,23 @@ Estos pasos permiten identificar la estructura de PostgreSQL, archivos críticos
 ### Objetivo
 Configurar PostgreSQL para aceptar conexiones remotas y establecer una conexión desde un equipo cliente.
 ### Requisitos
-•	Servidor PostgreSQL instalado y accesible en red.
-•	Acceso administrativo para modificar archivos de configuración.
-•	Equipo cliente con psql instalado.
+- Servidor PostgreSQL instalado y accesible en red.
+- Acceso administrativo para modificar archivos de configuración.
+- Equipo cliente con psql instalado.
 ### Pasos
 1.	Editar el archivo postgresql.conf para permitir conexiones remotas:
 Ubicar y modificar (usualmente en /etc/postgresql/14/main/postgresql.conf o similar):
     ```ini
     listen_addresses = '*'
+    ```
 2.	Editar pg_hba.conf para permitir conexiones desde la IP del cliente (ejemplo para red 192.168.1.0/24):
     ```css
     host    all             all             192.168.1.0/24           md5
+    ```
 3.	Reiniciar el servicio PostgreSQL para aplicar cambios:
     ```bash
     sudo systemctl restart postgresql
+    ```
 4.	Crear un usuario con contraseña para conexión remota:
     ```bash
     sudo -i -u postgres
@@ -150,11 +154,13 @@ Ubicar y modificar (usualmente en /etc/postgresql/14/main/postgresql.conf o simi
     CREATE ROLE remoto LOGIN PASSWORD 'tu_contraseña';
     GRANT ALL PRIVILEGES ON DATABASE postgres TO remoto;
     \q
+    ```
 5.	Desde el equipo cliente, conectar con:
     ```bash
     psql -h <IP_SERVIDOR> -U remoto -d postgres
+    ```
 6.	Verificar conexión y ejecutar consultas básicas.
 #### Explicación
 PostgreSQL por defecto escucha sólo conexiones locales. Cambiar listen_addresses y ajustar pg_hba.conf habilitan el acceso remoto seguro con autenticación. Se debe crear un usuario con permiso para acceder desde red externa.
 
-CopyWrite 2025
+Copywrite 2025
