@@ -51,31 +51,38 @@ Este laboratorio cubre la instalación desde repositorios oficiales para garanti
 ### Objetivo
 Familiarizarse con el cliente de línea de comandos psql para ejecutar comandos y explorar la base de datos.
 ### Requisitos
-•	PostgreSQL instalado y servicio activo.
-•	Acceso a usuario postgres o con permisos equivalentes.
+- PostgreSQL instalado y servicio activo.
+- Acceso a usuario postgres o con permisos equivalentes.
 ### Pasos
 1.	Acceder a psql como usuario postgres:
     ```bash
     sudo -i -u postgres
     psql
+    ```
 2.	Listar todas las bases de datos:
     ```sql
     \l
+    ```
 3.	Conectarse a una base de datos específica (ejemplo: postgres):
     ```sql
     \c postgres
+    ```
 4.	Listar todas las tablas en la base de datos actual:
     ```sql
     \dt
+    ```
 5.	Listar todos los roles de usuarios:
     ```sql
     \du
+    ```
 6.	Mostrar ayuda para comandos meta:
     ```sql
     \?
+    ```
 7.	Salir de psql:
     ```sql
     \q
+    ```
 #### Explicación
 El cliente psql permite administrar y consultar PostgreSQL de forma interactiva. Los comandos con barra invertida (\) son meta comandos internos que facilitan la navegación y gestión.
 
