@@ -1,4 +1,11 @@
-#  Capítulo 2: Indexación
+# Prácticas 2. Creación de índices B-tree 
+
+---
+
+**[⬅️ Atrás](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo1/) | [Lista general 🗂️](https://netec-mx.github.io/POSTSQL_ADV/)** | **[Siguiente ➡️](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo3/)**
+
+---
+
 ## Objetivos de los Laboratorios
 -	Construir índices B-Tree avanzados (multicolumna, parciales y sobre expresiones) y evaluar su impacto real.
 -	Diagnosticar cuándo un índice ayuda y cuándo no, usando EXPLAIN ANALYZE, estadísticas y parámetros de autovacuum.
@@ -315,3 +322,9 @@ El alumno deberá entregar un informe escrito que incluya:
     - ¿Cómo cambia la estrategia de indexación si los datos crecen a 10M registros?
 
 📌 Con esta tarea final, hemos practicado el diseño, diagnóstico y justificación del uso de índices, logrando pensar como un DBA de PostgreSQL en producción.
+
+---
+
+**[⬅️ Atrás](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo1/) | [Lista general 🗂️](https://netec-mx.github.io/POSTSQL_ADV/)** | **[Siguiente ➡️](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo3/)**
+
+---
