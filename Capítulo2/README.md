@@ -12,9 +12,9 @@ Aprender a crear índices B-tree simples y compuestos para mejorar el rendimient
 ### Pasos
 
 1. Acceder a `psql` y conectar a la base de datos de prueba:
-   ```bash
+```bash
    psql -U usuario -d basededatos
-   ```
+```
 2.	Crear una tabla de ejemplo con datos:
     ```sql
     CREATE TABLE clientes (
