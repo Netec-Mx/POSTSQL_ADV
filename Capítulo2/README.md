@@ -226,6 +226,7 @@ Seq Scan on clientes  (cost=0.00..35000.00 rows=500 width=64)
 1.	Seq Scan → No usó índice.
 2.	Rows Removed by Filter = 999500 → pésima eficiencia.
 3.	read=2000 → demasiadas lecturas desde disco.
+```
 👉 Solución: crear un índice de expresión LOWER(apellido).
 
 Con esta guía, puedes leer un plan de ejecución, detectando cuellos de botella y justificando decisiones de indexación.
@@ -268,7 +269,8 @@ Los alumnos deben ejecutar estas consultas representativas:
 9.	SELECT * FROM clientes WHERE LOWER(apellido) = 'lópez';
 10.	Consulta de reporte parcial (solo columnas específicas)
 11.	SELECT apellido, nombre FROM clientes WHERE apellido = 'Ramírez';
-
+```
+```
 ### Parte 2. Creación de índices avanzados
 El alumno deberá crear y evaluar los siguientes índices:
 1.	Índice estándar
@@ -282,6 +284,7 @@ El alumno deberá crear y evaluar los siguientes índices:
 9.	CREATE INDEX idx_apellido_lower ON clientes (LOWER(apellido));
 10.	Índice covering
 11.	CREATE INDEX idx_apellido_include ON clientes (apellido) INCLUDE (nombre);
+```
 
 ### Parte 3. Medición del impacto
 Ejecutar cada consulta con y sin índice, usando:
