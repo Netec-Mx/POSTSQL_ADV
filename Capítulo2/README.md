@@ -150,7 +150,7 @@ SELECT ...;
 ```
 Tendrás salida con estimaciones y resultados reales. Interprétala así:
 
- ### Paso 1. Tipo de operación
+ ### 1. Tipo de operación
 -	Seq Scan → PostgreSQL lee toda la tabla.
 ➝ Útil si no hay índices o la selectividad es muy baja.
 -	Index Scan → usa el índice y va al heap por cada fila.
@@ -159,7 +159,7 @@ Tendrás salida con estimaciones y resultados reales. Interprétala así:
 ➝ Eficiente para condiciones que devuelven muchas filas.
 ✔️ Pregunta: ¿el plan usó índice cuando esperabas?
 
- ### Paso 2. Costos estimados
+ ### 2. Costos estimados
 Cada operación tiene:
 (cost=0.29..8.30 rows=5 width=64)
 -	0.29 → costo de inicio (primer fila).
@@ -168,7 +168,7 @@ Cada operación tiene:
 -	width=64 → tamaño medio de cada fila (bytes).
 ✔️ Pregunta: ¿la estimación de filas (rows) se acerca a la realidad? Si no, revisar estadísticas con ANALYZE.
 
- ### Paso 3. Resultados reales
+ ### 3. Resultados reales
 
 Ejemplo:
 (actual time=0.020..0.025 rows=5 loops=1)
@@ -177,7 +177,7 @@ Ejemplo:
 -	loops=1 → número de veces que se ejecutó este plan.
 ✔️ Pregunta: ¿las filas reales coinciden con las estimadas? Si no, el optimizador puede elegir mal los planes.
 
- ### Paso 4. Métricas críticas
+ ### 4. Métricas críticas
 -	Index Cond → condición usada en el índice.
 ➝ Si está vacía o solo ves Filter, el índice no se aprovechó.
 -	Filter → condición aplicada después de leer datos.
@@ -186,7 +186,7 @@ Ejemplo:
 ➝ Demasiados fetches → evalúa índices covering con INCLUDE.
 ✔️ Pregunta: ¿estás filtrando demasiado tarde? ¿se puede optimizar con índices parciales o covering?
 
- ### Paso 5. Estadísticas de memoria y cache (BUFFERS)
+ ### 5. Estadísticas de memoria y cache (BUFFERS)
 
 Con (BUFFERS) aparecen:
 -	shared hit → páginas leídas desde cache (rápido).
@@ -195,13 +195,13 @@ Con (BUFFERS) aparecen:
 -	shared written → páginas escritas.
 ✔️ Pregunta: ¿hay demasiados read? → mejorar índices, aumentar cache (shared_buffers) o reescribir la consulta.
 
- ### Paso 6. Escalabilidad y bucles
+ ### 6. Escalabilidad y bucles
 -	Si loops es alto → la operación se repite muchas veces.
 ➝ Común en Nested Loop. Puede explotar con millones de filas.
 -	Si ves Hash Join o Merge Join, revisa si los índices permiten un Index Nested Loop más eficiente.
 ✔️ Pregunta: ¿el plan es escalable para millones de filas o solo funciona en pruebas pequeñas?
 
- ### Paso 7. Diagnóstico final
+ ### 7. Diagnóstico final
 -	¿El plan usó el índice correcto?
 -	¿Las estimaciones de filas fueron realistas?
 -	¿Se generaron demasiados Heap Fetches o Rows Removed by Filter?
@@ -256,7 +256,9 @@ SELECT
     now() - (random() * 365)::int * interval '1 day'
 FROM generate_series(1,1000000);
 ```
+
 ### Parte 1. Consultas frecuentes
+```
 Los alumnos deben ejecutar estas consultas representativas:
 1.	Búsqueda exacta por apellido
 2.	SELECT * FROM clientes WHERE apellido = 'García';
@@ -270,8 +272,9 @@ Los alumnos deben ejecutar estas consultas representativas:
 10.	Consulta de reporte parcial (solo columnas específicas)
 11.	SELECT apellido, nombre FROM clientes WHERE apellido = 'Ramírez';
 ```
-```
+
 ### Parte 2. Creación de índices avanzados
+```
 El alumno deberá crear y evaluar los siguientes índices:
 1.	Índice estándar
 2.	CREATE INDEX idx_apellido ON clientes (apellido);
@@ -287,6 +290,7 @@ El alumno deberá crear y evaluar los siguientes índices:
 ```
 
 ### Parte 3. Medición del impacto
+
 Ejecutar cada consulta con y sin índice, usando:
 ```sql
 EXPLAIN (ANALYZE, BUFFERS)
