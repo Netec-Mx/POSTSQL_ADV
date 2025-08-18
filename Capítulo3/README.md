@@ -2,6 +2,10 @@
 
 ---
 
+**[⬅️ Atrás](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo2/)** | **[Lista general 🗂️](https://netec-mx.github.io/POSTSQL_ADV/)** | **[Siguiente ➡️](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo4/)**
+
+---
+
 ## Laboratorio 3.1 – Uso básico de transacciones
 
 ### Objetivo  
@@ -122,5 +126,12 @@ Entender la función de VACUUM y autovacuum para limpiar filas obsoletas y mante
 6.	Revisar logs para verificar ejecución de autovacuum o usar vistas del sistema:
     ```sql
     SELECT * FROM pg_stat_activity WHERE query LIKE '%autovacuum%';
+
 #### Explicación
 VACUUM limpia espacio ocupado por versiones antiguas de filas (tuplas muertas) para evitar crecimiento descontrolado de tablas y mantener performance. Autovacuum automatiza esta tarea.
+
+---
+
+**[⬅️ Atrás](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo2/)** | **[Lista general 🗂️](https://netec-mx.github.io/POSTSQL_ADV/)** | **[Siguiente ➡️](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo4/)**
+
+---
