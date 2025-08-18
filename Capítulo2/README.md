@@ -14,6 +14,7 @@ Aprender a crear índices B-tree simples y compuestos para mejorar el rendimient
 1. Acceder a `psql` y conectar a la base de datos de prueba:
    ```bash
    psql -U usuario -d basededatos
+   ```
 2.	Crear una tabla de ejemplo con datos:
     ```sql
     CREATE TABLE clientes (
@@ -22,13 +23,15 @@ Aprender a crear índices B-tree simples y compuestos para mejorar el rendimient
     ciudad VARCHAR(50),
     edad INT
     );
-
+    ```
+```
     INSERT INTO clientes (nombre, ciudad, edad) VALUES
     ('Ana', 'Madrid', 30),
     ('Luis', 'Barcelona', 25),
     ('Carlos', 'Madrid', 40),
     ('María', 'Valencia', 35),
     ('Sofía', 'Barcelona', 28);
+```
 3.	Crear un índice B-tree simple sobre la columna ciudad:
     ```sql
     CREATE INDEX idx_ciudad ON clientes(ciudad);
