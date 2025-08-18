@@ -1,51 +1,175 @@
 # Capítulo 1: Introducción a PostgreSQL
 ---
-## Laboratorio 1.1 – Instalación de PostgreSQL v14 en Ubuntu
+## Laboratorio 1.1 – Instalación de PostgreSQL en Linux Ubuntu
 
-### Objetivo  
-Instalar y configurar PostgreSQL versión 14 en Ubuntu, verificar el correcto funcionamiento del servidor y preparar el entorno para su uso básico.
+### Objetivo
+Instalar PostgreSQL 16 junto a PostgreSQL 14 en la misma máquina, en un cluster y puerto independientes (p. ej. 5433), para pruebas, desarrollo o migración controlada.
 
-### Requisitos  
-- Sistema operativo Ubuntu 20.04 o superior.  
-- Usuario con privilegios sudo.  
-- Acceso a internet.
+## Descripción
+Usaremos el repositorio oficial de PostgreSQL (PGDG) para instalar postgresql-16. Esto crea un cluster nuevo 16/main con su propio directorio de datos y archivos de configuración (separado de 14/main). Ajustaremos el puerto, verificaremos que ambos clusters estén en línea y los agregaremos a pgAdmin.
 
-### Pasos
-1. Actualizar repositorios y sistema:
-    ```bash
-   sudo apt update
-   sudo apt upgrade -y
-    ```
-2.	Agregar repositorio oficial PostgreSQL:
-    ```bash
-    wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-    sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-    sudo apt update
-    ```
-3.	Instalar PostgreSQL 14:
-    ```bash
-    sudo apt install postgresql-14 -y
-    ```
-4.	Verificar estado del servicio:
-    ```bash
-    sudo systemctl status postgresql
-    ```
-5.	Acceder al prompt de PostgreSQL como usuario postgres:
-    ```bash
-    sudo -i -u postgres
-    psql
-    ```
-6.	Verificar versión en psql:
-    ```sql
-    SELECT version();
-    ```
-7.	Salir de psql y cerrar sesión postgres:
-    ```sql
-    \q
-    exit
-    ```
-#### Explicación
-Este laboratorio cubre la instalación desde repositorios oficiales para garantizar estabilidad y actualizaciones. Se verifica el servicio y se accede con el usuario administrador predeterminado.
+## Prerrequisitos
+−	Ubuntu 22.04 (Jammy) con sudo.
+−	Conexión a Internet.
+−	PostgreSQL 14 ya instalado y funcionando (normalmente en el puerto 5432).
+−	Puerto alterno libre (recomendado 5433).
+−	(Opcional) ufw habilitado si expondrás el puerto hacia tu red.
+---
+
+## Procedimiento paso a paso
+
+### Paso 1. Verifica tu instalación actual (versión 14)
+```
+sudo pg_lsclusters
+# También:
+psql -V
+sudo -u postgres psql -p 5432 -c "select version();"
+Confirma que 14 esté “online” y en el puerto 5432.
+```
+
+### Paso 2. Agrega el repositorio oficial de PostgreSQL (PGDG)
+```
+sudo apt update
+sudo apt install -y curl ca-certificates gnupg lsb-release
+curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc \
+  | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+echo "deb [signed-by=/etc/apt/trusted.gpg.d/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
+  | sudo tee /etc/apt/sources.list.d/pgdg.list
+sudo apt update
+```
+
+### Paso 3. Instala PostgreSQL 16
+```
+sudo apt install -y postgresql-16 postgresql-client-16
+Esto crea el cluster 16/main con su propio directorio de datos en /var/lib/postgresql/16/main y configuración en /etc/postgresql/16/main/.
+Nota: Si el puerto 5432 ya está ocupado por 14, a veces 16 se crea automáticamente en 5433. Lo confirmas en el siguiente paso.
+```
+
+### Paso 4 (Opcional). Confirma/ajusta el puerto del cluster 16
+```
+sudo pg_lsclusters
+•	Si ves 16 main online port 5433, perfecto.
+•	Si 16 quedó en 5432 (o quieres 5433), edita:
+sudo nano /etc/postgresql/16/main/postgresql.conf
+Busca la línea port = (descoméntala si es necesario) y deja:
+port = 5433
+Guarda y reinicia solo el cluster 16:
+sudo pg_ctlcluster 16 main restart
+```
+
+### Paso 5. (Opcional) Abre el puerto en el firewall
+```
+Si usas ufw y necesitas acceso externo:
+sudo ufw allow 5433/tcp
+sudo ufw status
+```
+
+### Paso 6. Verifica que ambos clusters estén en línea
+```
+sudo pg_lsclusters
+# Pruebas con psql:
+sudo -u postgres psql -p 5432 -c "select version();"
+sudo -u postgres psql -p 5433 -c "select version();"
+Deberías ver 14 respondiendo en 5432 y 16 en 5433.
+```
+
+### Paso 7 (Opcional-Verificar). Configura autenticación (si usarás contraseña)
+Por defecto en Ubuntu el acceso local suele ser por “peer”. Para usar pgAdmin con password:
+1.	Edita pg_hba.conf del 16:
+```
+sudo nano /etc/postgresql/16/main/pg_hba.conf
+Cambia líneas locales a md5 o scram-sha-256 (recomendado si tu password_encryption está en scram-sha-256):
+# ejemplo:
+local   all             all                                     scram-sha-256
+host    all             all             127.0.0.1/32            scram-sha-256
+host    all             all             ::1/128                 scram-sha-256
+```
+
+2.	Reinicia el cluster 16:
+```
+sudo pg_ctlcluster 16 main restart
+3.	Asigna password al rol postgres (del cluster 16):
+sudo -u postgres psql -p 5433 -c "\password postgres"
+```
+
+### Paso 8 (Opcional). Agrega el servidor 16 en pgAdmin
+```
+•	En pgAdmin: Add New Server…
+o	General → Name: PostgreSQL 16 (5433)
+o	Connection → Host: localhost
+o	Port: 5433
+o	Maintenance DB: postgres
+o	Username: postgres
+o	Password: (la que definiste)
+Guarda y prueba la conexión. Repite si quieres dejar también el 14 (5432) en pgAdmin.
+```
+
+### Paso 9. Comandos útiles de operación
+−	Ver estado de clusters:
+−	sudo pg_lsclusters
+−	Operar por cluster:
+−	sudo pg_ctlcluster 14 main stop
+−	sudo pg_ctlcluster 14 main start
+−	sudo pg_ctlcluster 16 main restart
+−	Servicio global (todos los clusters):
+−	sudo systemctl status postgresql
+−	sudo systemctl restart postgresql
+
+### Paso 10. Estructura de archivos (para ubicar todo)
+−	Configuración 16: /etc/postgresql/16/main/
+−	Datos 16: /var/lib/postgresql/16/main/
+−	Logs (según config): normalmente /var/log/postgresql/
+
+### Paso 11. (Opcional) Migrar datos de 14 → 16 más adelante
+−	Rápido para bases pequeñas: pg_dump/pg_dumpall desde 14 e importas en 16 (5433).
+−	Para tiempos cortos de indisponibilidad en bases grandes: pg_upgrade (requiere detener ambos durante el cambio). Podemos prepararte la guía cuando lo necesites.
+
+### Paso 12. (Opcional) Desinstalar o limpiar
+−	Detener y borrar cluster 16 (conserva paquetes):
+−	sudo pg_dropcluster 16 main --stop
+−	Quitar paquetes 16:
+−	sudo apt remove --purge -y postgresql-16 postgresql-client-16
+−	sudo apt autoremove -y
+ 
+
+## Resultado esperado
+−	PostgreSQL 14 en 5432 y PostgreSQL 16 en 5433, ambos “online”.
+−	Acceso por psql y pgAdmin a cada versión de forma independiente.
+
+
+## Interpretación de la actualización de llaves del repositorio de PostgreSQL.
+Interpretar la siguiente informacion: curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc \ | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg echo "deb [signed-by=/etc/apt/trusted.gpg.d/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \ | sudo tee /etc/apt/sources.list.d/pgdg.list y de donde sale toda esta infornacion?
+
+## Interpretación línea por línea
+### Línea 1
+curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc \
+  | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+•	curl -fsSL URL → Descarga silenciosamente (-s), muestra errores (-f), y sigue redirecciones (-L) desde la URL.
+•	https://www.postgresql.org/media/keys/ACCC4CF8.asc → Es la clave pública oficial GPG de PostgreSQL, usada para verificar la autenticidad de los paquetes.
+•	gpg --dearmor → Convierte el formato ASCII de la clave (.asc) a un formato binario (.gpg) que APT puede usar.
+•	Salida a /etc/apt/trusted.gpg.d/postgresql.gpg → Guarda la clave en el directorio de claves de confianza para APT.
+
+### En resumen:
+Esta línea descarga y guarda la clave de firma oficial de PostgreSQL para que tu sistema pueda verificar que los paquetes del repositorio no han sido modificados y son legítimos.
+
+## Línea 2
+echo "deb [signed-by=/etc/apt/trusted.gpg.d/postgresql.gpg] \
+http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
+  | sudo tee /etc/apt/sources.list.d/pgdg.list
+•	echo "deb ..." → Genera la línea que describe el repositorio.
+•	[signed-by=/etc/apt/trusted.gpg.d/postgresql.gpg] → Le dice a APT que los paquetes de este repositorio deben validarse con la clave GPG que descargaste antes.
+•	http://apt.postgresql.org/pub/repos/apt → Dirección oficial del repositorio PGDG (PostgreSQL Global Development Group).
+•	$(lsb_release -cs) → Comando que devuelve el nombre en clave de tu distribución Ubuntu (por ejemplo, en Ubuntu 22.04 es jammy).
+•	-pgdg → Indica que es el repositorio oficial de PostgreSQL, no el de Ubuntu.
+•	main → Rama principal del repositorio.
+•	sudo tee /etc/apt/sources.list.d/pgdg.list → Guarda esta línea en un archivo de configuración de APT para habilitar el repositorio.
+### En resumen:
+Esta línea crea un archivo en /etc/apt/sources.list.d/ con la definición del repositorio oficial de PostgreSQL, usando el nombre de tu versión de Ubuntu para apuntar a la carpeta correcta.
+
+### Fuente oficial:
+https://www.postgresql.org/download/linux/ubuntu/
+En esa página, el equipo de PostgreSQL mantiene actualizadas estas instrucciones con la clave GPG más reciente y la URL correcta del repositorio.
+
  
 ## Laboratorio 1.2 – Uso básico del cliente psql
 ### Objetivo
