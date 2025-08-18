@@ -245,9 +245,11 @@ echo "deb [signed-by=/etc/apt/trusted.gpg.d/postgresql.gpg] http://apt.postgresq
 **¿De dónde proviene toda esta información?**
 
 ### Interpretación línea por línea
-### Línea 1
 
-```curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc \
+#### Línea 1
+
+```
+curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc \
   | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
 ```
 
@@ -259,7 +261,7 @@ echo "deb [signed-by=/etc/apt/trusted.gpg.d/postgresql.gpg] http://apt.postgresq
 **En resumen:**
 Esta línea descarga y guarda la clave de firma oficial de PostgreSQL, para que tu sistema pueda verificar que los paquetes del repositorio no han sido modificados y sean legítimos.
 
-### Línea 2
+#### Línea 2
 
 ```
 echo "deb [signed-by=/etc/apt/trusted.gpg.d/postgresql.gpg] \
