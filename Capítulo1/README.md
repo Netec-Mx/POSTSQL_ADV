@@ -41,6 +41,7 @@ sudo apt update
 ### Paso 3. Instala PostgreSQL 16
 ```
 sudo apt install -y postgresql-16 postgresql-client-16
+
 Esto crea el cluster 16/main con su propio directorio de datos en /var/lib/postgresql/16/main y configuración en /etc/postgresql/16/main/.
 Nota: Si el puerto 5432 ya está ocupado por 14, a veces 16 se crea automáticamente en 5433. Lo confirmas en el siguiente paso.
 ```
@@ -48,11 +49,14 @@ Nota: Si el puerto 5432 ya está ocupado por 14, a veces 16 se crea automáticam
 ### Paso 4 (Opcional). Confirma/ajusta el puerto del cluster 16
 ```
 sudo pg_lsclusters
+
 -	Si ves 16 main online port 5433, perfecto.
 -	Si 16 quedó en 5432 (o quieres 5433), edita:
 sudo nano /etc/postgresql/16/main/postgresql.conf
+
 Busca la línea port = (descoméntala si es necesario) y deja:
 port = 5433
+
 Guarda y reinicia solo el cluster 16:
 sudo pg_ctlcluster 16 main restart
 ```
