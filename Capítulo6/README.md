@@ -2,6 +2,10 @@
 
 ---
 
+**[⬅️ Atrás](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo5/)** | **[Lista general 🗂️](https://netec-mx.github.io/POSTSQL_ADV/)** | **[Siguiente ➡️](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo7/)**
+
+---
+
 ## Laboratorio 6.1 – Creación de usuarios con privilegios distintos
 
 ### Objetivo  
@@ -104,3 +108,9 @@ Gestionar permisos granulares otorgando y revocando privilegios sobre tablas, es
 5.	Conectarse con diferentes usuarios y probar qué operaciones pueden realizar.
 #### Explicación
 Controlar permisos sobre objetos específicos permite adaptar el acceso a las necesidades reales, evitando riesgos por accesos indebidos o accidentales.
+
+---
+
+**[⬅️ Atrás](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo5/)** | **[Lista general 🗂️](https://netec-mx.github.io/POSTSQL_ADV/)** | **[Siguiente ➡️](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo7/)**
+
+---
