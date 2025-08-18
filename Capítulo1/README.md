@@ -95,12 +95,14 @@ sudo -u postgres psql -p 5433 -c "\password postgres"
 ### Paso 8 (Opcional). Agrega el servidor 16 en pgAdmin
 ```
 En pgAdmin: Add New Server…
+
 -	General → Name: PostgreSQL 16 (5433)
 -	Connection → Host: localhost
 -	Port: 5433
 -	Maintenance DB: postgres
 -	Username: postgres
 -	Password: (la que definiste)
+
 Guarda y prueba la conexión. Repite si quieres dejar también el 14 (5432) en pgAdmin.
 ```
 
@@ -122,7 +124,7 @@ Guarda y prueba la conexión. Repite si quieres dejar también el 14 (5432) en p
 
 ### Paso 11. (Opcional) Migrar datos de 14 → 16 más adelante
 -	Rápido para bases pequeñas: pg_dump/pg_dumpall desde 14 e importas en 16 (5433).
--	Para tiempos cortos de indisponibilidad en bases grandes: pg_upgrade (requiere detener ambos durante el cambio). Podemos prepararte la guía cuando lo necesites.
+-	Para tiempos cortos de indisponibilidad en bases grandes: pg_upgrade (requiere detener ambos durante el cambio).
 
 ### Paso 12. (Opcional) Desinstalar o limpiar
 -	Detener y borrar cluster 16 (conserva paquetes):
@@ -163,6 +165,7 @@ http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
 -	-pgdg → Indica que es el repositorio oficial de PostgreSQL, no el de Ubuntu.
 -	main → Rama principal del repositorio.
 -	sudo tee /etc/apt/sources.list.d/pgdg.list → Guarda esta línea en un archivo de configuración de APT para habilitar el repositorio.
+
 ### En resumen:
 Esta línea crea un archivo en /etc/apt/sources.list.d/ con la definición del repositorio oficial de PostgreSQL, usando el nombre de tu versión de Ubuntu para apuntar a la carpeta correcta.
 
@@ -170,7 +173,9 @@ Esta línea crea un archivo en /etc/apt/sources.list.d/ con la definición del r
 https://www.postgresql.org/download/linux/ubuntu/
 En esa página, el equipo de PostgreSQL mantiene actualizadas estas instrucciones con la clave GPG más reciente y la URL correcta del repositorio.
 
+
 ## Laboratorio 1.2 – Uso básico del cliente psql
+
 ### Objetivo
 Familiarizarse con el cliente de línea de comandos psql para ejecutar comandos y explorar la base de datos.
 ### Requisitos
