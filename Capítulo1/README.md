@@ -294,4 +294,3 @@ Ubicar y modificar (usualmente en /etc/postgresql/14/main/postgresql.conf o simi
 #### Explicación
 PostgreSQL por defecto escucha sólo conexiones locales. Cambiar listen_addresses y ajustar pg_hba.conf habilitan el acceso remoto seguro con autenticación. Se debe crear un usuario con permiso para acceder desde red externa.
 
-Copywrite 2025
