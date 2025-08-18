@@ -1,19 +1,21 @@
 # Prácticas 2. Creación de índices B-tree 
 
+## 🎯 Objetivos:
+Al finalizar la práctica, serás capaz de:
+-	Construir índices B-Tree avanzados (multicolumna, parciales y sobre expresiones) y evaluar su impacto real.
+-	Diagnosticar cuándo un índice ayuda y cuándo no, usando EXPLAIN ANALYZE, estadísticas y parámetros de autovacuum.
+-	Profundizar en métricas críticas (Heap Fetches, Rows Removed by Filter, Loops y Buffercache Hits).
+-	Aplicar buenas prácticas de diseño de índices y demostrar problemas comunes (selectividad baja, funciones en columnas e inserciones masivas).
+
 ---
 
 **[⬅️ Atrás](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo1/)** | **[Lista general 🗂️](https://netec-mx.github.io/POSTSQL_ADV/)** | **[Siguiente ➡️](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo3/)**
 
 ---
 
-## Objetivos de los Laboratorios
--	Construir índices B-Tree avanzados (multicolumna, parciales y sobre expresiones) y evaluar su impacto real.
--	Diagnosticar cuándo un índice ayuda y cuándo no, usando EXPLAIN ANALYZE, estadísticas y parámetros de autovacuum.
--	Profundizar en métricas críticas (Heap Fetches, Rows Removed by Filter, Loops, Buffercache Hits).
--	Aplicar buenas prácticas de diseño de índices y demostrar problemas comunes (selectividad baja, funciones en columnas, inserciones masivas).
-________________________________________
-## Laboratorio 2.1 – Creación y Diagnóstico de Índices B-Tree
-### Paso 1. Preparación de datos
+## Tarea 2.1. Creación y diagnóstico de índices B-Tree
+**Paso 1.** Preparación de datos.
+
 ```sql
 CREATE TABLE clientes (
     id SERIAL PRIMARY KEY,
@@ -23,7 +25,9 @@ CREATE TABLE clientes (
     fecha_registro DATE DEFAULT now()
 );
 ```
--- Insertamos 1 millón de registros con distribución controlada
+
+Inserta 1 millón de registros con distribución controlada.
+
 ```sql
 INSERT INTO clientes (nombre, apellido, activo)
 SELECT 
@@ -32,20 +36,24 @@ SELECT
     (random() < 0.7) -- 70% activos
 FROM generate_series(1, 1000000);
 ```
-👉 Con esto tendremos una tabla grande, con apellidos poco selectivos y un booleano (activo) de baja selectividad.
-________________________________________
-### Paso 2. Índice estándar
+
+> *💡 **Nota:** Con esto obtendrás una tabla grande: apellidos de baja selectividad y una columna booleana (activo) también poco selectiva.*
+
+**Paso 2.** Índice estándar.
+
 ```sql
 CREATE INDEX idx_clientes_apellido ON clientes (apellido);
 Consulta de prueba:
 EXPLAIN (ANALYZE, BUFFERS)
 SELECT * FROM clientes WHERE apellido = 'García';
 ```
-👉 Observa:
--	Index Scan o Bitmap Index Scan.
--	Heap Fetches: ¿cuántas veces tuvo que ir a la tabla tras usar el índice?
 
-### Paso 3. Índice multicolumna
+**👉 Observa:**
+-	_Index Scan o Bitmap Index Scan._
+-	_Heap Fetches:_ ¿cuántas veces tuvo que ir a la tabla después de usar el índice?
+
+**Paso 3.** Índice multicolumna.
+
 ```sql
 CREATE INDEX idx_clientes_apellido_nombre ON clientes (apellido, nombre);
 Consulta de prueba:
@@ -54,11 +62,13 @@ SELECT *
 FROM clientes 
 WHERE apellido = 'García' AND nombre LIKE 'a%';
 ```
+
 👉 Compara con el índice simple.
 
-Pregunta de análisis: ¿qué mejora y qué sigue igual?
+> *Pregunta de análisis: **¿qué mejora y qué sigue igual?***
 
-### Paso 4. Índice parcial
+**Paso 4.** Índice parcial.
+
 ```sql
 CREATE INDEX idx_clientes_activos ON clientes (apellido)
 WHERE activo = true;
@@ -68,159 +78,189 @@ SELECT *
 FROM clientes 
 WHERE apellido = 'García' AND activo = true;
 ```
-👉 Analiza:
--	Diferencia en Rows Removed by Filter.
+
+**👉 Analiza:**
+-	Diferencia en _Rows Removed by Filter_.
 -	Menor número de páginas leídas vs índice normal.
 
-### Paso 5. Índice sobre expresión
+**Paso 5.** Índice sobre expresión.
+
 ```sql
 CREATE INDEX idx_clientes_apellido_lower ON clientes (LOWER(apellido));
 ```
+
 Comparación:
--- Sin índice de expresión
+- Sin índice de expresión
+
 ```sql
 EXPLAIN (ANALYZE, BUFFERS)
 SELECT * FROM clientes WHERE LOWER(apellido) = 'garcía';
 ```
--- Con índice de expresión
+
+- Con índice de expresión
+
 ```sql
 EXPLAIN (ANALYZE, BUFFERS)
 SELECT * FROM clientes WHERE LOWER(apellido) = 'garcía';
 ```
+
 👉 Verifica cómo cambia de Seq Scan → Index Scan.
 
-## Laboratorio 2.2 – Casos donde los B-Tree NO ayudan
-### Paso 1. Baja selectividad
+## Tarea 2. Casos donde los B-Tree NO ayudan.
+
+**Paso 1.** Baja selectividad.
+
 ```sql
 EXPLAIN (ANALYZE, BUFFERS)
 SELECT * FROM clientes WHERE activo = true;
 ```
-👉 Aunque hay un índice, PostgreSQL hará un Seq Scan porque casi toda la tabla cumple la condición.
 
-### Paso 2. Agregación masiva
+👉 Aunque hay un índice, PostgreSQL hará un _Seq Scan_ porque casi toda la tabla cumple la condición.
+
+**Paso 2.** Agregación masiva
 ```sql
 EXPLAIN (ANALYZE, BUFFERS)
 SELECT COUNT(*) FROM clientes;
 ```
 👉 Ningún índice ayuda: se necesita un Seq Scan.
 
-### Paso 3. Inserciones masivas y page splits
--- Índice con fillfactor para optimizar inserciones
+**Paso 3.** Inserciones masivas y page splits.
+
+- Índice con fillfactor para optimizar inserciones.
+
 ```sql
 CREATE INDEX idx_clientes_fecha_registro
 ON clientes (fecha_registro) WITH (fillfactor = 70);
 ```
--- Simulación de inserciones diarias
+
+- Simulación de inserciones diarias
+
 ```sql
 INSERT INTO clientes (nombre, apellido, activo, fecha_registro)
 SELECT md5(random()::text), 'Nuevo', true, now()
 FROM generate_series(1,100000);
 ```
+
 👉 Usa pg_stat_all_indexes para observar crecimiento y validación de page splits.
 
-## Laboratorio 2.3 – Interpretación avanzada con EXPLAIN
-### Paso 1. Métricas críticas
-Ejecuta una consulta con BUFFERS y analiza:
+## Tarea 3. Interpretación avanzada con EXPLAIN.
+
+**Paso 1.** Métricas críticas.
+
+- Ejecuta una consulta con BUFFERS y analiza:
+
 ```sql
 EXPLAIN (ANALYZE, BUFFERS)
 SELECT * FROM clientes WHERE apellido = 'Ramírez';
 ```
-👉 Interpreta:
+
+**👉 Interpreta:**
 -	Heap Fetches: ¿el índice está accediendo demasiado a la tabla? → considerar índices covering.
 -	Rows Removed by Filter: ¿el índice devuelve demasiados falsos positivos? → usar parcial.
 -	Buffers: cache hits vs lecturas desde disco.
 
-### Paso 2. Índices covering (INCLUDE)
+**Paso 2.** Índices covering (INCLUDE).
+
 ```sql
 CREATE INDEX idx_clientes_apellido_include ON clientes (apellido) INCLUDE (nombre);
 Consulta:
 EXPLAIN (ANALYZE, BUFFERS)
 SELECT apellido, nombre FROM clientes WHERE apellido = 'López';
 ```
+
 👉 Observa cómo ya no necesita Heap Fetches.
 
-## Tarea Final del Capítulo
-1.	Diseñar un set de consultas frecuentes (ej. búsquedas por apellido, búsquedas por clientes activos, búsquedas case-insensitive).
-2.	Crear diferentes tipos de índices (estándar, multicolumna, parcial, expresión, covering).
-3.	Medir el impacto con EXPLAIN (ANALYZE, BUFFERS) y documentar:
--	Costos estimados vs reales.
--	Accesos al heap.
--	Páginas leídas desde disco.
--	Diferencia en tiempo de ejecución.
+## Tarea del capítulo:
 
-📋 Guía de Interpretación de EXPLAIN (Checklist Experto)
+1.	Diseña un set de consultas frecuentes (por ejemplo: búsquedas por apellido, búsquedas por clientes activos, búsquedas case-insensitive).
+2.	Crea diferentes tipos de índices (estándar, multicolumna, parcial, expresión, covering).
+3.	Mide el impacto con EXPLAIN (ANALYZE, BUFFERS) y documenta:
+    -	Costos estimados vs reales.
+    -	Accesos al heap.
+    -	Páginas leídas desde disco.
+    -	Diferencia en tiempo de ejecución.
+
+### 📋 Guía de Interpretación de EXPLAIN (Checklist Experto)
 Cuando ejecutes:
 
 ```sql
 EXPLAIN (ANALYZE, BUFFERS)
 SELECT ...;
 ```
+
 Tendrás salida con estimaciones y resultados reales. Interprétala así:
 
- ### 1. Tipo de operación
+**1. Tipo de operación**
 -	Seq Scan → PostgreSQL lee toda la tabla.
 ➝ Útil si no hay índices o la selectividad es muy baja.
 -	Index Scan → usa el índice y va al heap por cada fila.
 ➝ Puede generar muchos Heap Fetches.
 -	Bitmap Index Scan → el índice devuelve posiciones de páginas, se agrupan y luego se leen en bloque.
 ➝ Eficiente para condiciones que devuelven muchas filas.
-✔️ Pregunta: ¿el plan usó índice cuando esperabas?
 
- ### 2. Costos estimados
-Cada operación tiene:
-(cost=0.29..8.30 rows=5 width=64)
+✔️ Pregunta: **¿el plan usó índice cuando esperabas?**
+
+**2. Costos estimados**
+Cada operación tiene: `(cost=0.29..8.30 rows=5 width=64)`.
 -	0.29 → costo de inicio (primer fila).
 -	8.30 → costo total estimado.
 -	rows=5 → filas estimadas.
 -	width=64 → tamaño medio de cada fila (bytes).
-✔️ Pregunta: ¿la estimación de filas (rows) se acerca a la realidad? Si no, revisar estadísticas con ANALYZE.
 
- ### 3. Resultados reales
+✔️ Pregunta: **¿la estimación de filas (rows) se acerca a la realidad?** Si no, revisar estadísticas con ANALYZE.
 
-Ejemplo:
-(actual time=0.020..0.025 rows=5 loops=1)
+**3. Resultados reales**
+
+Ejemplo: `(actual time=0.020..0.025 rows=5 loops=1)`.
 -	actual time=... → tiempo real (inicio..fin).
 -	rows=5 → filas reales devueltas.
 -	loops=1 → número de veces que se ejecutó este plan.
-✔️ Pregunta: ¿las filas reales coinciden con las estimadas? Si no, el optimizador puede elegir mal los planes.
 
- ### 4. Métricas críticas
+✔️ Pregunta: **¿las filas reales coinciden con las estimadas?** Si no, el optimizador puede elegir mal los planes.
+
+**4. Métricas críticas**
 -	Index Cond → condición usada en el índice.
 ➝ Si está vacía o solo ves Filter, el índice no se aprovechó.
 -	Filter → condición aplicada después de leer datos.
 ➝ Si aquí se eliminan muchas filas (Rows Removed by Filter), quizá necesites un índice parcial.
 -	Heap Fetches → accesos a la tabla después de usar el índice.
 ➝ Demasiados fetches → evalúa índices covering con INCLUDE.
-✔️ Pregunta: ¿estás filtrando demasiado tarde? ¿se puede optimizar con índices parciales o covering?
 
- ### 5. Estadísticas de memoria y cache (BUFFERS)
+✔️ Pregunta: **¿estás filtrando demasiado tarde? ¿se puede optimizar con índices parciales o covering?**
+
+**5. Estadísticas de memoria y cache (BUFFERS)**
 
 Con (BUFFERS) aparecen:
 -	shared hit → páginas leídas desde cache (rápido).
 -	shared read → páginas leídas desde disco (lento).
 -	shared dirtied → páginas modificadas.
 -	shared written → páginas escritas.
-✔️ Pregunta: ¿hay demasiados read? → mejorar índices, aumentar cache (shared_buffers) o reescribir la consulta.
 
- ### 6. Escalabilidad y bucles
+✔️ Pregunta: **¿hay demasiados read?** → mejorar índices, aumentar cache (shared_buffers) o reescribir la consulta.
+
+**6. Escalabilidad y bucles**
 -	Si loops es alto → la operación se repite muchas veces.
 ➝ Común en Nested Loop. Puede explotar con millones de filas.
 -	Si ves Hash Join o Merge Join, revisa si los índices permiten un Index Nested Loop más eficiente.
-✔️ Pregunta: ¿el plan es escalable para millones de filas o solo funciona en pruebas pequeñas?
 
- ### 7. Diagnóstico final
+✔️ Pregunta: **¿el plan es escalable para millones de filas o solo funciona en pruebas pequeñas?**
+
+**7. Diagnóstico final**
 -	¿El plan usó el índice correcto?
 -	¿Las estimaciones de filas fueron realistas?
 -	¿Se generaron demasiados Heap Fetches o Rows Removed by Filter?
 -	¿El acceso a disco (read) es alto comparado con hit?
 -	¿El plan elegido escala con más datos?
 
-## Ejemplo Rápido Adicional
+### Ejemplo rápido adicional
+
 ```sql
 EXPLAIN (ANALYZE, BUFFERS)
 SELECT * FROM clientes WHERE LOWER(apellido) = 'garcía';
 ```
+
 Salida (simplificada):
+
 ```
 Seq Scan on clientes  (cost=0.00..35000.00 rows=500 width=64)
 (actual time=0.05..120.00 rows=500 loops=1)
@@ -228,22 +268,26 @@ Seq Scan on clientes  (cost=0.00..35000.00 rows=500 width=64)
   Rows Removed by Filter: 999500
   Buffers: shared hit=100, read=2000
 ```
+
 ✅ Diagnóstico con checklist:
-```
+
 1.	Seq Scan → No usó índice.
 2.	Rows Removed by Filter = 999500 → pésima eficiencia.
 3.	read=2000 → demasiadas lecturas desde disco.
-```
-👉 Solución: crear un índice de expresión LOWER(apellido).
+
+**👉 Solución:** Crear un índice de expresión LOWER(apellido).
 
 Con esta guía, puedes leer un plan de ejecución, detectando cuellos de botella y justificando decisiones de indexación.
 
-##  Tarea Final – Capítulo 2: Indexación (Nivel Avanzado)
+##  Tarea final: Indexación (Nivel Avanzado)
  
-## Objetivo
-Diseñar, crear y evaluar estrategias de indexación avanzadas sobre una tabla de clientes simulada. El alumno deberá justificar con evidencia (EXPLAIN ANALYZE, BUFFERS) por qué un índice mejora (o no) el rendimiento.
+## 🎯 Objetivos:
+Al finalizar la práctica, serás capaz de:
+- Diseñar, crear y evaluar estrategias de indexación avanzadas sobre una tabla de clientes simulada. El alumno deberá justificar con evidencia (EXPLAIN ANALYZE, BUFFERS) por qué un índice mejora (o no) el rendimiento.
 
-### Preparación de datos
+## Instruccions:
+**Preparación de datos:**
+
 ```sql
 CREATE TABLE clientes (
     id SERIAL PRIMARY KEY,
@@ -253,7 +297,9 @@ CREATE TABLE clientes (
     fecha_registro DATE DEFAULT now()
 );
 ```
--- Insertar 1 millón de registros de prueba
+
+- Inserta 1 millón de registros de prueba.
+
 ```sql
 INSERT INTO clientes (nombre, apellido, activo, fecha_registro)
 SELECT 
@@ -264,7 +310,8 @@ SELECT
 FROM generate_series(1,1000000);
 ```
 
-### Parte 1. Consultas frecuentes
+**Parte 1. Consultas frecuentes.**
+
 ```
 Los alumnos deben ejecutar estas consultas representativas:
 1.	Búsqueda exacta por apellido
@@ -280,7 +327,8 @@ Los alumnos deben ejecutar estas consultas representativas:
 11.	SELECT apellido, nombre FROM clientes WHERE apellido = 'Ramírez';
 ```
 
-### Parte 2. Creación de índices avanzados
+**Parte 2. Creación de índices avanzados.**
+
 ```
 El alumno deberá crear y evaluar los siguientes índices:
 1.	Índice estándar
@@ -296,20 +344,23 @@ El alumno deberá crear y evaluar los siguientes índices:
 11.	CREATE INDEX idx_apellido_include ON clientes (apellido) INCLUDE (nombre);
 ```
 
-### Parte 3. Medición del impacto
+**Parte 3. Medición del impacto**
 
-Ejecutar cada consulta con y sin índice, usando:
+- Ejecuta cada consulta con y sin índice, usando:
+
 ```sql
 EXPLAIN (ANALYZE, BUFFERS)
 SELECT ...
 ```
-Y documentar en una tabla comparativa como la siguiente:
+
+- Documenta en una tabla comparativa como la siguiente imagen:
 
 ![Tabla de resultados](TablaIndices.png)
 
+**Parte 4. Informe final.**
 
-### Parte 4. Informe final
-El alumno deberá entregar un informe escrito que incluya:
+Deberás entregar un informe escrito que incluya:
+
 -	Capturas de EXPLAIN (ANALYZE, BUFFERS).
 -	Comparación de cada índice en términos de:
     - Diferencia entre costos estimados y reales.
