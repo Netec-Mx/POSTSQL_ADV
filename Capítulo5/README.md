@@ -1,4 +1,7 @@
 # Capítulo 5: Replicación y Alta Disponibilidad
+---
+
+**[⬅️ Atrás](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo4/)** | **[Lista general 🗂️](https://netec-mx.github.io/POSTSQL_ADV/)** | **[Siguiente ➡️](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo6/)**
 
 ---
 
@@ -117,3 +120,9 @@ Simular la caída del servidor primario y realizar el failover manual promoviend
 5.	Documentar tiempo, pasos y resultados del proceso.
 #### Explicación
 Este procedimiento asegura la continuidad del servicio ante fallos, aunque es manual y requiere supervisión, siendo una base para sistemas de alta disponibilidad.
+
+---
+
+**[⬅️ Atrás](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo4/)** | **[Lista general 🗂️](https://netec-mx.github.io/POSTSQL_ADV/)** | **[Siguiente ➡️](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo6/)**
+
+---
