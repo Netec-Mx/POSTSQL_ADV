@@ -22,8 +22,8 @@ Usaremos el repositorio oficial de PostgreSQL (PGDG) para instalar postgresql-16
 sudo pg_lsclusters
 
 # También:
-psql -V
-sudo -u postgres psql -p 5432 -c "select version();"
+sudo psql -V
+sudo -i -u postgres psql -p 5432 -c "select version();"
 
 Confirma que 14 esté “online” y en el puerto 5432.
 ```
