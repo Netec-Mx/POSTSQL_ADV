@@ -15,7 +15,6 @@ Usaremos el repositorio oficial de PostgreSQL (PGDG) para instalar postgresql-16
 -	Puerto alterno libre (recomendado 5433).
 -	(Opcional) ufw habilitado si expondrás el puerto hacia tu red.
 
-
 ## Procedimiento paso a paso
 
 ### Paso 1. Verifica tu instalación actual (versión 14)
