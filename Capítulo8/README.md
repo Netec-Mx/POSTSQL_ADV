@@ -2,6 +2,10 @@
 
 ---
 
+**[⬅️ Atrás](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo7/)** | **[Lista general 🗂️](https://netec-mx.github.io/POSTSQL_ADV/)** | **[Siguiente ➡️](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo1/)**
+
+---
+
 ## Laboratorio 8.1 – Actualización mayor con `pg_upgrade`
 
 ### Objetivo  
@@ -100,3 +104,9 @@ Mejorar el planificador de consultas creando estadísticas extendidas para colum
 4.	Observar mejoras en planes y tiempos de ejecución.
 #### Explicación
 Las estadísticas extendidas permiten al planificador tomar decisiones más precisas sobre combinaciones de columnas, mejorando la eficiencia de las consultas.
+
+---
+
+**[⬅️ Atrás](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo7/)** | **[Lista general 🗂️](https://netec-mx.github.io/POSTSQL_ADV/)** | **[Siguiente ➡️](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo1/)**
+
+---
