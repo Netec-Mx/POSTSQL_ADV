@@ -299,10 +299,7 @@ SELECT ...
 Y documentar en una tabla comparativa como la siguiente:
 
 ![Tabla de resultados](TablaIndices.png)
-Consulta	Índice aplicado	Costo estimado	Filas estimadas vs reales	Heap Fetches	Buffers (hit vs read)	Tiempo ejecución (ms)	Observaciones
-Buscar apellido exacto	idx_apellido	0.29..8.30	500 vs 498	500	hit=50, read=5	0.05	Buen match, planificador acertó
-Case-insensitive	idx_apellido_lower	0.29..12.00	200 vs 195	200	hit=40, read=3	0.04	El índice evita el Seq Scan
-Clientes activos	idx_activos	0.30..500	700000 vs 690000	Alto	read elevado	85.0	Muy baja selectividad, no conviene índice
+
 
 ### Parte 4. Informe final
 El alumno deberá entregar un informe escrito que incluya:
