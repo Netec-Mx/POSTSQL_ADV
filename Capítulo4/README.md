@@ -2,6 +2,10 @@
 
 ---
 
+**[⬅️ Atrás](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo3/)** | **[Lista general 🗂️](https://netec-mx.github.io/POSTSQL_ADV/)** | **[Siguiente ➡️](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo5/)**
+
+---
+
 ## Laboratorio 4.1 – Respaldo lógico con `pg_dump` y restauración con `pg_restore`
 
 ### Objetivo  
@@ -172,3 +176,9 @@ o	Si los WAL están en un directorio separado (archivo de archivado), asegurarse
     psql -U usuario -d basededatos -c "SELECT COUNT(*) FROM tabla_importante;"
 #### Explicación
 Los archivos WAL contienen el historial de transacciones y cambios que no se reflejan inmediatamente en los archivos base. Restaurar los WAL junto con los archivos de datos es fundamental para asegurar que la base pueda recuperarse hasta el último punto consistente, evitando corrupción o pérdida de datos.
+
+---
+
+**[⬅️ Atrás](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo3/)** | **[Lista general 🗂️](https://netec-mx.github.io/POSTSQL_ADV/)** | **[Siguiente ➡️](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo5/)**
+
+---
