@@ -134,7 +134,7 @@ Guarda y prueba la conexión. Repite si quieres dejar también el 14 (5432) en p
 -	sudo apt autoremove -y
  
 
-## Resultado esperado
+### Resultado esperado
 -	PostgreSQL 14 en 5432 y PostgreSQL 16 en 5433, ambos “online”.
 -	Acceso por psql y pgAdmin a cada versión de forma independiente.
 
@@ -151,10 +151,10 @@ curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc \
 -	gpg --dearmor → Convierte el formato ASCII de la clave (.asc) a un formato binario (.gpg) que APT puede usar.
 -	Salida a /etc/apt/trusted.gpg.d/postgresql.gpg → Guarda la clave en el directorio de claves de confianza para APT.
 
-### En resumen:
+#### En resumen:
 Esta línea descarga y guarda la clave de firma oficial de PostgreSQL para que tu sistema pueda verificar que los paquetes del repositorio no han sido modificados y son legítimos.
 
-## Línea 2
+### Línea 2
 echo "deb [signed-by=/etc/apt/trusted.gpg.d/postgresql.gpg] \
 http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
   | sudo tee /etc/apt/sources.list.d/pgdg.list
@@ -166,10 +166,10 @@ http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
 -	main → Rama principal del repositorio.
 -	sudo tee /etc/apt/sources.list.d/pgdg.list → Guarda esta línea en un archivo de configuración de APT para habilitar el repositorio.
 
-### En resumen:
+#### En resumen:
 Esta línea crea un archivo en /etc/apt/sources.list.d/ con la definición del repositorio oficial de PostgreSQL, usando el nombre de tu versión de Ubuntu para apuntar a la carpeta correcta.
 
-### Fuente oficial:
+#### Fuente oficial:
 https://www.postgresql.org/download/linux/ubuntu/
 En esa página, el equipo de PostgreSQL mantiene actualizadas estas instrucciones con la clave GPG más reciente y la URL correcta del repositorio.
 
