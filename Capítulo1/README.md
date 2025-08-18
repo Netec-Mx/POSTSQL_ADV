@@ -20,7 +20,7 @@ Usaremos el repositorio oficial de PostgreSQL (PGDG) para instalar postgresql-16
 ### Paso 1. Verifica tu instalación actual (versión 14)
 ```
 sudo pg_lsclusters
-
+&nbsp;
 # También:
 sudo psql -V
 sudo -i -u postgres psql -p 5432 -c "select version();"
