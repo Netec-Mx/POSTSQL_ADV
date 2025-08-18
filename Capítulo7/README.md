@@ -2,6 +2,10 @@
 
 ---
 
+**[⬅️ Atrás](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo6/)** | **[Lista general 🗂️](https://netec-mx.github.io/POSTSQL_ADV/)** | **[Siguiente ➡️](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo8/)**
+
+---
+
 ## Laboratorio 7.1 – Modificación de parámetros en `postgresql.conf`
 
 ### Objetivo  
@@ -101,3 +105,9 @@ Configurar parámetros relacionados con seguridad como SSL y encriptación de co
 5.	Verificar que la conexión esté cifrada y que la autenticación use el método configurado.
 #### Explicación
 Implementar SSL y métodos seguros de autenticación protege la confidencialidad e integridad de la información en tránsito y las credenciales de acceso.
+
+---
+
+**[⬅️ Atrás](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo6/)** | **[Lista general 🗂️](https://netec-mx.github.io/POSTSQL_ADV/)** | **[Siguiente ➡️](https://netec-mx.github.io/POSTSQL_ADV/Cap%C3%ADtulo8/)**
+
+---
