@@ -9,11 +9,11 @@ Instalar PostgreSQL 16 junto a PostgreSQL 14 en la misma máquina, en un cluster
 Usaremos el repositorio oficial de PostgreSQL (PGDG) para instalar postgresql-16. Esto crea un cluster nuevo 16/main con su propio directorio de datos y archivos de configuración (separado de 14/main). Ajustaremos el puerto, verificaremos que ambos clusters estén en línea y los agregaremos a pgAdmin.
 
 ## Prerrequisitos
-−	Ubuntu 22.04 (Jammy) con sudo.
-−	Conexión a Internet.
-−	PostgreSQL 14 ya instalado y funcionando (normalmente en el puerto 5432).
-−	Puerto alterno libre (recomendado 5433).
-−	(Opcional) ufw habilitado si expondrás el puerto hacia tu red.
+-	Ubuntu 22.04 (Jammy) con sudo.
+-	Conexión a Internet.
+-	PostgreSQL 14 ya instalado y funcionando (normalmente en el puerto 5432).
+-	Puerto alterno libre (recomendado 5433).
+-	(Opcional) ufw habilitado si expondrás el puerto hacia tu red.
 ---
 
 ## Procedimiento paso a paso
@@ -48,8 +48,8 @@ Nota: Si el puerto 5432 ya está ocupado por 14, a veces 16 se crea automáticam
 ### Paso 4 (Opcional). Confirma/ajusta el puerto del cluster 16
 ```
 sudo pg_lsclusters
-•	Si ves 16 main online port 5433, perfecto.
-•	Si 16 quedó en 5432 (o quieres 5433), edita:
+-	Si ves 16 main online port 5433, perfecto.
+-	Si 16 quedó en 5432 (o quieres 5433), edita:
 sudo nano /etc/postgresql/16/main/postgresql.conf
 Busca la línea port = (descoméntala si es necesario) y deja:
 port = 5433
@@ -94,47 +94,47 @@ sudo -u postgres psql -p 5433 -c "\password postgres"
 
 ### Paso 8 (Opcional). Agrega el servidor 16 en pgAdmin
 ```
-•	En pgAdmin: Add New Server…
-o	General → Name: PostgreSQL 16 (5433)
-o	Connection → Host: localhost
-o	Port: 5433
-o	Maintenance DB: postgres
-o	Username: postgres
-o	Password: (la que definiste)
+En pgAdmin: Add New Server…
+-	General → Name: PostgreSQL 16 (5433)
+-	Connection → Host: localhost
+-	Port: 5433
+-	Maintenance DB: postgres
+-	Username: postgres
+-	Password: (la que definiste)
 Guarda y prueba la conexión. Repite si quieres dejar también el 14 (5432) en pgAdmin.
 ```
 
 ### Paso 9. Comandos útiles de operación
-−	Ver estado de clusters:
-−	sudo pg_lsclusters
-−	Operar por cluster:
-−	sudo pg_ctlcluster 14 main stop
-−	sudo pg_ctlcluster 14 main start
-−	sudo pg_ctlcluster 16 main restart
-−	Servicio global (todos los clusters):
-−	sudo systemctl status postgresql
-−	sudo systemctl restart postgresql
+-	Ver estado de clusters:
+-	sudo pg_lsclusters
+-	Operar por cluster:
+-	sudo pg_ctlcluster 14 main stop
+-	sudo pg_ctlcluster 14 main start
+-	sudo pg_ctlcluster 16 main restart
+-	Servicio global (todos los clusters):
+-	sudo systemctl status postgresql
+-	sudo systemctl restart postgresql
 
 ### Paso 10. Estructura de archivos (para ubicar todo)
-−	Configuración 16: /etc/postgresql/16/main/
-−	Datos 16: /var/lib/postgresql/16/main/
-−	Logs (según config): normalmente /var/log/postgresql/
+-	Configuración 16: /etc/postgresql/16/main/
+-	Datos 16: /var/lib/postgresql/16/main/
+-	Logs (según config): normalmente /var/log/postgresql/
 
 ### Paso 11. (Opcional) Migrar datos de 14 → 16 más adelante
-−	Rápido para bases pequeñas: pg_dump/pg_dumpall desde 14 e importas en 16 (5433).
-−	Para tiempos cortos de indisponibilidad en bases grandes: pg_upgrade (requiere detener ambos durante el cambio). Podemos prepararte la guía cuando lo necesites.
+-	Rápido para bases pequeñas: pg_dump/pg_dumpall desde 14 e importas en 16 (5433).
+-	Para tiempos cortos de indisponibilidad en bases grandes: pg_upgrade (requiere detener ambos durante el cambio). Podemos prepararte la guía cuando lo necesites.
 
 ### Paso 12. (Opcional) Desinstalar o limpiar
-−	Detener y borrar cluster 16 (conserva paquetes):
-−	sudo pg_dropcluster 16 main --stop
-−	Quitar paquetes 16:
-−	sudo apt remove --purge -y postgresql-16 postgresql-client-16
-−	sudo apt autoremove -y
+-	Detener y borrar cluster 16 (conserva paquetes):
+-	sudo pg_dropcluster 16 main –stop
+-	Quitar paquetes 16:
+-	sudo apt remove --purge -y postgresql-16 postgresql-client-16
+-	sudo apt autoremove -y
  
 
 ## Resultado esperado
-−	PostgreSQL 14 en 5432 y PostgreSQL 16 en 5433, ambos “online”.
-−	Acceso por psql y pgAdmin a cada versión de forma independiente.
+-	PostgreSQL 14 en 5432 y PostgreSQL 16 en 5433, ambos “online”.
+-	Acceso por psql y pgAdmin a cada versión de forma independiente.
 
 
 ## Interpretación de la actualización de llaves del repositorio de PostgreSQL.
@@ -144,10 +144,10 @@ Interpretar la siguiente informacion: curl -fsSL https://www.postgresql.org/medi
 ### Línea 1
 curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc \
   | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
-•	curl -fsSL URL → Descarga silenciosamente (-s), muestra errores (-f), y sigue redirecciones (-L) desde la URL.
-•	https://www.postgresql.org/media/keys/ACCC4CF8.asc → Es la clave pública oficial GPG de PostgreSQL, usada para verificar la autenticidad de los paquetes.
-•	gpg --dearmor → Convierte el formato ASCII de la clave (.asc) a un formato binario (.gpg) que APT puede usar.
-•	Salida a /etc/apt/trusted.gpg.d/postgresql.gpg → Guarda la clave en el directorio de claves de confianza para APT.
+-	curl -fsSL URL → Descarga silenciosamente (-s), muestra errores (-f), y sigue redirecciones (-L) desde la URL.
+-	https://www.postgresql.org/media/keys/ACCC4CF8.asc → Es la clave pública oficial GPG de PostgreSQL, usada para verificar la autenticidad de los paquetes.
+-	gpg --dearmor → Convierte el formato ASCII de la clave (.asc) a un formato binario (.gpg) que APT puede usar.
+-	Salida a /etc/apt/trusted.gpg.d/postgresql.gpg → Guarda la clave en el directorio de claves de confianza para APT.
 
 ### En resumen:
 Esta línea descarga y guarda la clave de firma oficial de PostgreSQL para que tu sistema pueda verificar que los paquetes del repositorio no han sido modificados y son legítimos.
@@ -156,13 +156,13 @@ Esta línea descarga y guarda la clave de firma oficial de PostgreSQL para que t
 echo "deb [signed-by=/etc/apt/trusted.gpg.d/postgresql.gpg] \
 http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
   | sudo tee /etc/apt/sources.list.d/pgdg.list
-•	echo "deb ..." → Genera la línea que describe el repositorio.
-•	[signed-by=/etc/apt/trusted.gpg.d/postgresql.gpg] → Le dice a APT que los paquetes de este repositorio deben validarse con la clave GPG que descargaste antes.
-•	http://apt.postgresql.org/pub/repos/apt → Dirección oficial del repositorio PGDG (PostgreSQL Global Development Group).
-•	$(lsb_release -cs) → Comando que devuelve el nombre en clave de tu distribución Ubuntu (por ejemplo, en Ubuntu 22.04 es jammy).
-•	-pgdg → Indica que es el repositorio oficial de PostgreSQL, no el de Ubuntu.
-•	main → Rama principal del repositorio.
-•	sudo tee /etc/apt/sources.list.d/pgdg.list → Guarda esta línea en un archivo de configuración de APT para habilitar el repositorio.
+-	echo "deb ..." → Genera la línea que describe el repositorio.
+-	[signed-by=/etc/apt/trusted.gpg.d/postgresql.gpg] → Le dice a APT que los paquetes de este repositorio deben validarse con la clave GPG que descargaste antes.
+-	http://apt.postgresql.org/pub/repos/apt → Dirección oficial del repositorio PGDG (PostgreSQL Global Development Group).
+-	$(lsb_release -cs) → Comando que devuelve el nombre en clave de tu distribución Ubuntu (por ejemplo, en Ubuntu 22.04 es jammy).
+-	-pgdg → Indica que es el repositorio oficial de PostgreSQL, no el de Ubuntu.
+-	main → Rama principal del repositorio.
+-	sudo tee /etc/apt/sources.list.d/pgdg.list → Guarda esta línea en un archivo de configuración de APT para habilitar el repositorio.
 ### En resumen:
 Esta línea crea un archivo en /etc/apt/sources.list.d/ con la definición del repositorio oficial de PostgreSQL, usando el nombre de tu versión de Ubuntu para apuntar a la carpeta correcta.
 
@@ -170,7 +170,6 @@ Esta línea crea un archivo en /etc/apt/sources.list.d/ con la definición del r
 https://www.postgresql.org/download/linux/ubuntu/
 En esa página, el equipo de PostgreSQL mantiene actualizadas estas instrucciones con la clave GPG más reciente y la URL correcta del repositorio.
 
- 
 ## Laboratorio 1.2 – Uso básico del cliente psql
 ### Objetivo
 Familiarizarse con el cliente de línea de comandos psql para ejecutar comandos y explorar la base de datos.
