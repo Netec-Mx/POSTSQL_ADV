@@ -306,13 +306,13 @@ Clientes activos	idx_activos	0.30..500	700000 vs 690000	Alto	read elevado	85.0	M
 El alumno deberá entregar un informe escrito que incluya:
 -	Capturas de EXPLAIN (ANALYZE, BUFFERS).
 -	Comparación de cada índice en términos de:
-o	Diferencia entre costos estimados y reales.
-o	Reducción (o no) de Heap Fetches.
-o	Impacto en lecturas desde disco vs cache.
-o	Variación en tiempo de ejecución.
+    - Diferencia entre costos estimados y reales.
+    - Reducción (o no) de Heap Fetches.
+    - Impacto en lecturas desde disco vs cache.
+    - Variación en tiempo de ejecución.
 -	Conclusiones sobre:
-o	¿Qué índices son más útiles en este dataset?
-o	¿Qué índices son inútiles o incluso perjudiciales?
-o	¿Cómo cambia la estrategia de indexación si los datos crecen a 10M registros?
+    - Qué índices son más útiles en este dataset?
+    - ¿Qué índices son inútiles o incluso perjudiciales?
+    - ¿Cómo cambia la estrategia de indexación si los datos crecen a 10M registros?
 
-📌 Con esta tarea final, los alumnos practican diseño, diagnóstico y justificación del uso de índices, logrando pensar como un DBA de PostgreSQL en producción.
+📌 Con esta tarea final, hemos practicado el diseño, diagnóstico y justificación del uso de índices, logrando pensar como un DBA de PostgreSQL en producción.
