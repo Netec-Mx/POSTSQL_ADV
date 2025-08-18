@@ -117,6 +117,7 @@ Ejecuta una consulta con BUFFERS y analiza:
 ```sql
 EXPLAIN (ANALYZE, BUFFERS)
 SELECT * FROM clientes WHERE apellido = 'Ramírez';
+```
 👉 Interpreta:
 -	Heap Fetches: ¿el índice está accediendo demasiado a la tabla? → considerar índices covering.
 -	Rows Removed by Filter: ¿el índice devuelve demasiados falsos positivos? → usar parcial.
