@@ -76,7 +76,7 @@ SELECT * FROM pedidos;
 1. Realizar respaldo lógico de la base de datos `ventas` en formato comprimido personalizado:
   ```bash
    sudo -i -u postgres
-   pg_dump -U usuario -F c -f respaldo.bak ventas
+   pg_dump -U postgres -F c -f respaldo.bak ventas
 ```
 2.	Crear una nueva base de datos para restaurar:
 ```bash
