@@ -101,7 +101,21 @@ Realizar un respaldo físico completo de PostgreSQL usando pg_basebackup y exami
 ### Requisitos
 - Acceso al servidor PostgreSQL con permisos de replicación o superusuario.
 - Espacio suficiente en disco para almacenar el respaldo.
+- Editar el archivo /etc/postgresql/14/main con los siguientes parametros:
+  ```
+  wal_level = replica
+  archive_mode = on
+  archive_command = 'cp %p /var/lib/postgresql/archive/%f'
+```
+Cambia /var/lib/postgresql/archive/ por una ruta válida en tu sistema si deseas archivar los WALs.
+Después de cambiar estos parámetros, reinicia PostgreSQL:
+```bash
+sudo systemctl restart postgresql
+```
 ### Pasos
+
+
+
 1.	Ejecutar respaldo físico con compresión en formato tar:
 ```bash
 pg_basebackup -U replicador -D /ruta/respaldo -Ft -z -P
