@@ -106,10 +106,11 @@ Realizar un respaldo físico completo de PostgreSQL usando pg_basebackup y exami
 ```bash
 pg_basebackup -U replicador -D /ruta/respaldo -Ft -z -P
 ```
-Nota: El usuario replicador debe tener permisos para replicación.
-2.	Verificar que se hayan generado archivos comprimidos en /ruta/respaldo.
-3.	Para restaurar, detener el servidor y reemplazar el directorio de datos por el contenido del respaldo descomprimido.
-4.	Iniciar el servidor y verificar funcionamiento:
+Nota: 
+- El usuario replicador debe tener permisos para replicación.
+- Verificar que se hayan generado archivos comprimidos en /ruta/respaldo.
+- Para restaurar, detener el servidor y reemplazar el directorio de datos por el contenido del respaldo descomprimido.
+- Iniciar el servidor y verificar funcionamiento:
 ```bash
 sudo systemctl restart postgresql
 ```
