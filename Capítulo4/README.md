@@ -106,15 +106,13 @@ Realizar un respaldo físico completo de PostgreSQL usando pg_basebackup y exami
   wal_level = replica
   archive_mode = on
   archive_command = 'cp %p /var/lib/postgresql/archive/%f'
-```
-Cambia /var/lib/postgresql/archive/ por una ruta válida en tu sistema si deseas archivar los WALs.
-Después de cambiar estos parámetros, reinicia PostgreSQL:
+  ```
+- Cambia /var/lib/postgresql/archive/ por una ruta válida en tu sistema si deseas archivar los WALs.
+- Después de cambiar estos parámetros, reinicia PostgreSQL:
 ```bash
 sudo systemctl restart postgresql
 ```
-### Pasos
-
-
+### Pasos para realizar el backup
 
 1.	Ejecutar respaldo físico con compresión en formato tar:
 ```bash
