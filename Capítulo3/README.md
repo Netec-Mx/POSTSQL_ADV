@@ -117,8 +117,8 @@ MVCC permite que diferentes transacciones vean versiones distintas de una fila p
 ### Objetivo
 Entender la función de VACUUM y autovacuum para limpiar filas obsoletas y mantener el rendimiento.
 ### Requisitos
-•	PostgreSQL en ejecución.
-•	Tabla con actividad (como cuentas).
+- PostgreSQL en ejecución.
+- Tabla con actividad (como cuentas).
 ### Pasos
 1.	Realizar múltiples actualizaciones y eliminaciones en la tabla para generar filas muertas:
     ```sql
