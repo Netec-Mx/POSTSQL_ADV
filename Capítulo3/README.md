@@ -20,6 +20,7 @@ Comprender el funcionamiento básico de las transacciones en PostgreSQL mediante
 1. Acceder a `psql` y seleccionar la base de datos:
    ```bash
    psql -U usuario -d basededatos
+   ```
 2.	Crear una tabla simple para pruebas:
     ```sql
     CREATE TABLE cuentas (
@@ -29,22 +30,27 @@ Comprender el funcionamiento básico de las transacciones en PostgreSQL mediante
     );
 
     INSERT INTO cuentas (titular, saldo) VALUES ('Juan', 1000), ('Ana', 1500);
+    ```
 3.	Iniciar una transacción y actualizar saldo:
     ```sql
     BEGIN;
     UPDATE cuentas SET saldo = saldo - 100 WHERE titular = 'Juan';
     UPDATE cuentas SET saldo = saldo + 100 WHERE titular = 'Ana';
+    ```
     -- No hacer COMMIT todavía
 4.	Consultar los saldos dentro de la misma sesión:
     ```sql
     SELECT * FROM cuentas;
+    ```
 5.	Abrir otra sesión psql y consultar la tabla:
     ```sql
     SELECT * FROM cuentas;
+    ```
     Nota: Verás que los cambios aún no son visibles aquí.
 6.	Volver a la primera sesión y realizar un ROLLBACK para deshacer cambios:
     ```sql
     ROLLBACK;
+    ```
 7.	Consultar nuevamente los saldos para confirmar reversión.
 8.	Repetir la transacción, pero ahora realizar un COMMIT para confirmar cambios:
     ```sql
@@ -52,6 +58,7 @@ Comprender el funcionamiento básico de las transacciones en PostgreSQL mediante
     UPDATE cuentas SET saldo = saldo - 100 WHERE titular = 'Juan';
     UPDATE cuentas SET saldo = saldo + 100 WHERE titular = 'Ana';
     COMMIT;
+    ```
 9.	Verificar que los cambios ahora son visibles en ambas sesiones.
 
 ### Explicación
@@ -69,12 +76,14 @@ Simular bloqueos pesimistas en PostgreSQL para entender cómo se gestionan confl
     ```sql
     BEGIN;
     SELECT * FROM cuentas WHERE titular = 'Juan' FOR UPDATE;
+    ```
     -- No hacer COMMIT ni ROLLBACK todavía
 3.	En la sesión 2, intentar actualizar la misma fila:
 - Esta operación quedará bloqueada esperando a que la sesión 1 termine.
 4.	Volver a sesión 1 y finalizar la transacción con:
     ```sql
     COMMIT;
+    ```
 5.	La sesión 2 continuará y podrá completar la actualización.
 6.	Observar y analizar el comportamiento.
 ### Explicación
@@ -90,10 +99,12 @@ Observar cómo PostgreSQL maneja versiones múltiples de filas para permitir con
 1.	En la sesión 1, ejecutar una consulta para obtener xmin y xmax (identificadores de versión):
     ```sql
     SELECT id, titular, saldo, xmin, xmax FROM cuentas;
+    ```
 2.	En la sesión 2, iniciar transacción y actualizar una fila:
     ```sql
     BEGIN;
     UPDATE cuentas SET saldo = saldo + 200 WHERE titular = 'Juan';
+    ```
 3.	En la sesión 1, volver a consultar la tabla con xmin y xmax.
 4.	Observar que la fila tiene una versión nueva (nuevo xmin) mientras la antigua persiste visible para la sesión 1.
 5.	En la sesión 2, hacer COMMIT.
@@ -113,20 +124,23 @@ Entender la función de VACUUM y autovacuum para limpiar filas obsoletas y mante
     ```sql
     UPDATE cuentas SET saldo = saldo + 50 WHERE titular = 'Ana';
     DELETE FROM cuentas WHERE titular = 'Carlos'; -- Si existe
+    ```
 2.	Ejecutar manualmente VACUUM:
     ```sql
     VACUUM VERBOSE cuentas;
+    ```
 3.	Observar el reporte detallado del proceso.
 4.	Consultar parámetros relacionados con autovacuum:
     ```sql
     SHOW autovacuum;
     SHOW autovacuum_vacuum_threshold;
     SHOW autovacuum_vacuum_scale_factor;
+    ```
 5.	Simular actividad intensa para forzar autovacuum (puede usar scripts o varias actualizaciones).
 6.	Revisar logs para verificar ejecución de autovacuum o usar vistas del sistema:
     ```sql
     SELECT * FROM pg_stat_activity WHERE query LIKE '%autovacuum%';
-
+    ```
 #### Explicación
 VACUUM limpia espacio ocupado por versiones antiguas de filas (tuplas muertas) para evitar crecimiento descontrolado de tablas y mantener performance. Autovacuum automatiza esta tarea.
 
