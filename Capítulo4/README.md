@@ -213,7 +213,7 @@ sudo rm -rf /var/lib/postgresql/14/main_old
 ### Explicación
 La restauración desde un respaldo físico completo consiste en reemplazar la carpeta de datos con una copia exacta de los archivos del servidor en un estado consistente. Este método es rápido y confiable para recuperaciones totales, pero requiere que el servidor esté apagado durante la operación.
 
-## Laboratorio 4.5 – Recuperación total desde respaldo físico completo (incluyendo WAL)
+## Laboratorio 4.6 – Recuperación total desde respaldo físico completo (incluyendo WAL)
 
 ### Objetivo  
 Restaurar completamente un servidor PostgreSQL usando un respaldo físico completo con `pg_basebackup`, asegurando también la recuperación de los archivos WAL para mantener la consistencia y permitir recuperación hasta el último punto válido.
@@ -256,6 +256,63 @@ psql -U usuario -d basededatos -c "SELECT COUNT(*) FROM tabla_importante;"
 ```
 ### Explicación
 Los archivos WAL contienen el historial de transacciones y cambios que no se reflejan inmediatamente en los archivos base. Restaurar los WAL junto con los archivos de datos es fundamental para asegurar que la base pueda recuperarse hasta el último punto consistente, evitando corrupción o pérdida de datos.
+
+## Laboratorio 4.7 – Instalación y configuración de Barman
+### Objetivo
+Instalar Barman y preparar conexión segura con un servidor PostgreSQL.
+### Requisitos
+-	Servidor Barman en una máquina distinta (solo si va a ser remoto).
+-	Acceso SSH y credenciales (solo si va a ser remoto).
+### Pasos
+1.	Instalar Barman:
+```bash
+apt install barman barman-cli
+```
+2.	Crear usuario de replicación en PostgreSQL:
+```sql
+CREATE ROLE barman WITH REPLICATION LOGIN PASSWORD 'segura';
+```
+3.	Configurar pg_hba.conf:
+```bash
+host replication barman 192.168.1.50/32 md5
+```
+4.	Copiar clave SSH a servidor PostgreSQL (solo si va a ser remoto):
+```bash
+ssh-copy-id barman@192.168.1.20
+```
+5.	Configurar /etc/barman.conf:
+```bash
+[produccion]
+description = "Servidor Producción"
+conninfo = host=192.168.1.20 user=barman dbname=postgres
+backup_method = postgres
+streaming_archiver = on
+archiver = on
+```
+6.	Verificar conexión:
+```bash
+barman check produccion
+```
+## Laboratorio 4.8 – Respaldo local (o remoto) y restauración con Barman
+Objetivo
+Ejecutar un respaldo remoto centralizado y restaurarlo en un servidor alterno.
+Requisitos
+-	 4.7 completada.
+Pasos
+1.	Realizar respaldo:
+```bash
+barman backup producción
+```
+2.	Listar respaldos:
+```bash
+barman list-backup produccion
+3.	Restaurar último respaldo en otra ruta:
+```bash
+barman recover produccion latest /var/lib/postgresql/restauración
+```
+Verificación
+-	Iniciar PostgreSQL en la ruta de restauración y validar datos.
+
 
 ---
 
