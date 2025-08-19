@@ -99,8 +99,8 @@ El respaldo lógico crea un volcado que contiene comandos para reconstruir la ba
 ### Objetivo
 Realizar un respaldo físico completo de PostgreSQL usando pg_basebackup y examinar los archivos generados.
 ### Requisitos
-•	Acceso al servidor PostgreSQL con permisos de replicación o superusuario.
-•	Espacio suficiente en disco para almacenar el respaldo.
+- Acceso al servidor PostgreSQL con permisos de replicación o superusuario.
+- Espacio suficiente en disco para almacenar el respaldo.
 ### Pasos
 1.	Ejecutar respaldo físico con compresión en formato tar:
 ```bash
