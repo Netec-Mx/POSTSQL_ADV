@@ -73,7 +73,7 @@ SELECT * FROM pedidos;
 
 ### Pasos para realizar el laboratorio 4.1
 
-1. Realizar respaldo lógico de la base de datos `basededatos` en formato comprimido personalizado:
+1. Realizar respaldo lógico de la base de datos `ventas` en formato comprimido personalizado:
   ```bash
    sudo -i -u postgres
    pg_dump -U usuario -F c -f respaldo.bak ventas
