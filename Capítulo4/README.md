@@ -13,26 +13,86 @@ Realizar un respaldo lógico de una base de datos usando `pg_dump` y restaurar e
 
 ### Requisitos  
 - PostgreSQL instalado y funcionando.  
-- Acceso a la base de datos con datos para respaldar.  
 - Permisos para crear bases nuevas.
+- Acceso a la base de datos con datos para respaldar.  
+- Para cumplir con los requisitos necesitas tener una base de datos ventas con un esquema y algunos datos.
 
-### Pasos
+### Pasos para crear la base de datos ventas
+### 1. Conectarte a PostgreSQL como superusuario
+```bash
+psql -U postgres
+```
+### 2. Crear la base de datos ventas
+```sql
+CREATE DATABASE ventas;
+Conéctate a la nueva base de datos:
+\c ventas
+```
+### 3. Crear tablas
+Vamos a usar dos tablas: clientes y pedidos.
+-- Tabla de clientes
+```sql
+CREATE TABLE clientes (
+    id_cliente SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    fecha_registro DATE DEFAULT CURRENT_DATE
+);
+```
+-- Tabla de pedidos
+```sql
+CREATE TABLE pedidos (
+    id_pedido SERIAL PRIMARY KEY,
+    id_cliente INT REFERENCES clientes(id_cliente),
+    fecha DATE NOT NULL,
+    monto NUMERIC(10,2) NOT NULL,
+    estado VARCHAR(20) DEFAULT 'pendiente'
+);
+```
+### 4. Insertar datos de prueba
+-- Insertar clientes
+```sql
+INSERT INTO clientes (nombre, email) VALUES
+('Ana López', 'ana@example.com'),
+('Carlos Pérez', 'carlos@example.com'),
+('María Gómez', 'maria@example.com');
+```
+-- Insertar pedidos
+```sql
+INSERT INTO pedidos (id_cliente, fecha, monto, estado) VALUES
+(1, '2025-08-01', 250.50, 'pagado'),
+(2, '2025-08-03', 125.00, 'pendiente'),
+(3, '2025-08-05', 500.75, 'enviado'),
+(1, '2025-08-10', 300.00, 'pendiente');
+```
+### 5. Verificar que los datos se insertaron
+```sql
+SELECT * FROM clientes;
+SELECT * FROM pedidos;
+```
+
+### Pasos para realizar el laboratorio 4.1
 
 1. Realizar respaldo lógico de la base de datos `basededatos` en formato comprimido personalizado:
-   ```bash
+  ```bash
    pg_dump -U usuario -F c -f respaldo.bak basededatos
+```
 2.	Crear una nueva base de datos para restaurar:
-    ```bash
-    createdb -U usuario basededatos_restaurada
+```bash
+createdb -U usuario basededatos_restaurada
+```
 3.	Restaurar el respaldo usando pg_restore:
-    ```bash
-    pg_restore -U usuario -d basededatos_restaurada -v respaldo.bak
+```bash
+pg_restore -U usuario -d basededatos_restaurada -v respaldo.bak
+```
 4.	Conectarse a la base restaurada y verificar tablas y datos:
-    ```bash
-    psql -U usuario -d basededatos_restaurada
-    \dt
-    SELECT COUNT(*) FROM tabla_importante;
-#### Explicación
+```bash
+
+psql -U usuario -d basededatos_restaurada
+\dt
+SELECT COUNT(*) FROM tabla_importante;
+```
+### Explicación
 El respaldo lógico crea un volcado que contiene comandos para reconstruir la base de datos. El formato personalizado (-F c) permite restaurar objetos selectivamente con pg_restore.
 
 ## Laboratorio 4.2 – Respaldo físico con pg_basebackup
@@ -43,15 +103,17 @@ Realizar un respaldo físico completo de PostgreSQL usando pg_basebackup y exami
 •	Espacio suficiente en disco para almacenar el respaldo.
 ### Pasos
 1.	Ejecutar respaldo físico con compresión en formato tar:
-    ```bash
-    pg_basebackup -U replicador -D /ruta/respaldo -Ft -z -P
+```bash
+pg_basebackup -U replicador -D /ruta/respaldo -Ft -z -P
+```
 Nota: El usuario replicador debe tener permisos para replicación.
 2.	Verificar que se hayan generado archivos comprimidos en /ruta/respaldo.
 3.	Para restaurar, detener el servidor y reemplazar el directorio de datos por el contenido del respaldo descomprimido.
 4.	Iniciar el servidor y verificar funcionamiento:
-    ```bash
-    sudo systemctl restart postgresql
-#### Explicación
+```bash
+sudo systemctl restart postgresql
+```
+### Explicación
 El respaldo físico copia todos los archivos de datos y WAL necesarios para restaurar la base de datos en un estado consistente exacto al momento del respaldo.
 
 ## Laboratorio 4.3 – Configuración de archivado WAL
@@ -62,16 +124,18 @@ Configurar el archivado de Write-Ahead Logs (WAL) para permitir recuperaciones b
 •	Directorio seguro para almacenar WAL archivados.
 ### Pasos
 1.	Editar el archivo postgresql.conf (ubicación típica: /etc/postgresql/14/main/postgresql.conf):
-o	Activar archivado WAL:
 
-    ```bash
-    wal_level = replica
-    archive_mode = on
-    archive_command = 'test ! -f /ruta_archivo/%f && cp %p /ruta_archivo/%f'
+Activar archivado WAL:
+```
+wal_level = replica
+archive_mode = on
+archive_command = 'test ! -f /ruta_archivo/%f && cp %p /ruta_archivo/%f'
+```
 2.	Crear el directorio para almacenar WAL y asignar permisos adecuados.
 3.	Reiniciar el servidor PostgreSQL para aplicar cambios:
-    ```bash
-    sudo systemctl restart postgresql
+```bash
+sudo systemctl restart postgresql
+```
 4.	Verificar que los WAL se estén copiando al directorio especificado.
 ### Explicación
 El archivado WAL es fundamental para realizar recuperaciones punto en el tiempo y para la replicación. El archive_command define cómo se guardan los logs.
@@ -85,21 +149,24 @@ Simular un fallo, y usar respaldos base junto con WAL archivados para recuperar 
 •	Acceso para detener y arrancar el servidor.
 ### Pasos
 1.	Detener el servidor PostgreSQL:
-    ```bash
-    sudo systemctl stop postgresql
+```bash
+sudo systemctl stop postgresql
+```
 2.	Restaurar el respaldo base en el directorio de datos.
 3.	Crear un archivo recovery.conf (o modificar postgresql.conf en versiones recientes) con parámetros para la recuperación:
-    ```bash
-    restore_command = 'cp /ruta_archivo/%f %p'
-    recovery_target_time = 'YYYY-MM-DD HH:MM:SS'
+```
+restore_command = 'cp /ruta_archivo/%f %p'
+recovery_target_time = 'YYYY-MM-DD HH:MM:SS'
+```
 4.	Iniciar el servidor:
-    ```bash
-    sudo systemctl start postgresql
+```bash
+sudo systemctl start postgresql
+```
 5.	Observar los logs para confirmar que la recuperación se realizó hasta el punto deseado.
 6.	Verificar que los datos son consistentes y corresponden a la fecha y hora objetivo.
-#### Explicación
+### Explicación
 PITR permite recuperar la base a un momento exacto usando el respaldo base y los WAL archivados. Es una técnica clave para minimizar pérdida de datos tras fallos.
- 
+
 ## Laboratorio 4.5 – Recuperación total desde respaldo físico completo
 
 ### Objetivo  
@@ -113,32 +180,39 @@ Restaurar completamente un servidor PostgreSQL usando un respaldo físico comple
 ### Pasos
 
 1. **Detener el servidor PostgreSQL** para permitir restauración:  
-   ```bash
+  ```bash
    sudo systemctl stop postgresql
+```
 2.	Eliminar o mover el directorio de datos actual (normalmente /var/lib/postgresql/14/main o según configuración):
-    ```bash
-    sudo mv /var/lib/postgresql/14/main /var/lib/postgresql/14/main_old
+```bash
+sudo mv /var/lib/postgresql/14/main /var/lib/postgresql/14/main_old
+```
 3.	Descomprimir y copiar el respaldo físico al directorio de datos:
 Supongamos que el respaldo está en /ruta/respaldo/base.tar.gz:
-    ```bash
-    sudo tar -xzf /ruta/respaldo/base.tar.gz -C /var/lib/postgresql/14/main
+```bash
+sudo tar -xzf /ruta/respaldo/base.tar.gz -C /var/lib/postgresql/14/main
+```
 4.	Ajustar permisos del directorio de datos para el usuario postgres:
-    ```bash
-    sudo chown -R postgres:postgres /var/lib/postgresql/14/main
-    sudo chmod -R 700 /var/lib/postgresql/14/main
+```bash
+sudo chown -R postgres:postgres /var/lib/postgresql/14/main
+sudo chmod -R 700 /var/lib/postgresql/14/main
+```
 5.	Iniciar el servidor PostgreSQL:
-    ```bash
-    sudo systemctl start postgresql
+```bash
+sudo systemctl start postgresql
+```
 6.	Verificar que el servidor esté activo y la base restaurada correctamente:
-    ```bash
-    sudo systemctl status postgresql
-    psql -U usuario -d basededatos -c "SELECT COUNT(*) FROM tabla_importante;"
+```bash
+sudo systemctl status postgresql
+psql -U usuario -d basededatos -c "SELECT COUNT(*) FROM tabla_importante;"
+```
 7.	(Opcional) Limpiar respaldo antiguo si todo está correcto:
-    ```bash
-    sudo rm -rf /var/lib/postgresql/14/main_old
-#### Explicación
+```bash
+sudo rm -rf /var/lib/postgresql/14/main_old
+```
+### Explicación
 La restauración desde un respaldo físico completo consiste en reemplazar la carpeta de datos con una copia exacta de los archivos del servidor en un estado consistente. Este método es rápido y confiable para recuperaciones totales, pero requiere que el servidor esté apagado durante la operación.
- 
+
 ## Laboratorio 4.5 – Recuperación total desde respaldo físico completo (incluyendo WAL)
 
 ### Objetivo  
@@ -152,29 +226,35 @@ Restaurar completamente un servidor PostgreSQL usando un respaldo físico comple
 ### Pasos
 
 1. **Detener el servidor PostgreSQL**:
-   ```bash
+  ```bash
    sudo systemctl stop postgresql
+```
 2.	Mover o eliminar el directorio de datos actual:
-    ```bash
-    sudo mv /var/lib/postgresql/14/main /var/lib/postgresql/14/main_old
+```bash
+sudo mv /var/lib/postgresql/14/main /var/lib/postgresql/14/main_old
+```
 3.	Restaurar el respaldo físico completo (incluyendo WAL):
-o	Si el respaldo fue hecho en formato tar comprimido con WAL incluidos, extraer todo al directorio de datos:
-    ```bash
-    sudo tar -xzf /ruta/respaldo/base_con_wal.tar.gz -C /var/lib/postgresql/14/main
+-	Si el respaldo fue hecho en formato tar comprimido con WAL incluidos, extraer todo al directorio de datos:
+```bash
+sudo tar -xzf /ruta/respaldo/base_con_wal.tar.gz -C /var/lib/postgresql/14/main
+```
 4.	Asegurar que los archivos WAL estén presentes dentro del directorio de datos o en la ubicación configurada para archivado WAL.
-o	Si los WAL están en un directorio separado (archivo de archivado), asegurarse que restore_command esté configurado correctamente para recuperarlos durante el arranque.
+-	Si los WAL están en un directorio separado (archivo de archivado), asegurarse que restore_command esté configurado correctamente para recuperarlos durante el arranque.
 5.	Configurar permisos adecuados para el directorio de datos:
-    ```bash
-    sudo chown -R postgres:postgres /var/lib/postgresql/14/main
-    sudo chmod -R 700 /var/lib/postgresql/14/main
+```bash
+sudo chown -R postgres:postgres /var/lib/postgresql/14/main
+sudo chmod -R 700 /var/lib/postgresql/14/main
+```
 6.	Iniciar el servidor PostgreSQL:
-    ```bash
-    sudo systemctl start postgresql
+```bash
+sudo systemctl start postgresql
+```
 7.	Verificar el estado y la integridad de la base de datos:
-    ```bash
-    sudo systemctl status postgresql
-    psql -U usuario -d basededatos -c "SELECT COUNT(*) FROM tabla_importante;"
-#### Explicación
+```bash
+sudo systemctl status postgresql
+psql -U usuario -d basededatos -c "SELECT COUNT(*) FROM tabla_importante;"
+```
+### Explicación
 Los archivos WAL contienen el historial de transacciones y cambios que no se reflejan inmediatamente en los archivos base. Restaurar los WAL junto con los archivos de datos es fundamental para asegurar que la base pueda recuperarse hasta el último punto consistente, evitando corrupción o pérdida de datos.
 
 ---
