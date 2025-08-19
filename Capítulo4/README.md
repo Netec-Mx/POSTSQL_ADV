@@ -101,11 +101,11 @@ Realizar un respaldo físico completo de PostgreSQL usando pg_basebackup y exami
 ### Requisitos
 - Acceso al servidor PostgreSQL con permisos de replicación o superusuario.
 - Espacio suficiente en disco para almacenar el respaldo.
-- Crea el direcotorio de respaldos desde el usuario postgres:
+- Crea el directorio de respaldos desde el usuario postgres:
   ```bash
-  mkdir /var/lib/postgresql/respaldos
+      mkdir /var/lib/postgresql/respaldos
   ```
-- Crear el siguiente directorio desde el usuario postgres para almacenar los archivos de transacciones:
+- Crear el siguiente directorio desde el usuario postgres para almacenar los archivos de WALs:
   ```bash
       mkdir /var/lib/postgresql/archive
   ```
@@ -115,7 +115,6 @@ Realizar un respaldo físico completo de PostgreSQL usando pg_basebackup y exami
   archive_mode = on
   archive_command = 'cp %p /var/lib/postgresql/archive/%f'
   ```
-- Cambia /var/lib/postgresql/archive/ por una ruta válida en tu sistema si deseas archivar los WALs.
 - Después de cambiar estos parámetros, reinicia PostgreSQL:
 ```bash
 sudo systemctl restart postgresql
@@ -124,11 +123,11 @@ sudo systemctl restart postgresql
 
 1.	Ejecutar respaldo físico con compresión en formato tar:
 ```bash
-pg_basebackup -U postgres -D /ruta/respaldo -Ft -z -P
+pg_basebackup -U postgres -D /var/lib/postgresql/respaldos -Ft -z -P
 ```
 Nota: 
 - El usuario replicador debe tener permisos para replicación.
-- Verificar que se hayan generado archivos comprimidos en /ruta/respaldo.
+- Verificar que se hayan generado archivos comprimidos en /var/lib/postgresql/respaldos.
 - Para restaurar, detener el servidor y reemplazar el directorio de datos por el contenido del respaldo descomprimido.
 - Iniciar el servidor y verificar funcionamiento:
 ```bash
