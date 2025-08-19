@@ -75,22 +75,22 @@ SELECT * FROM pedidos;
 
 1. Realizar respaldo lógico de la base de datos `basededatos` en formato comprimido personalizado:
   ```bash
-   pg_dump -U usuario -F c -f respaldo.bak basededatos
+   sudo -i -u postgres
+   pg_dump -U usuario -F c -f respaldo.bak ventas
 ```
 2.	Crear una nueva base de datos para restaurar:
 ```bash
-createdb -U usuario basededatos_restaurada
+createdb -U postgres basededatos_restaurada
 ```
 3.	Restaurar el respaldo usando pg_restore:
 ```bash
-pg_restore -U usuario -d basededatos_restaurada -v respaldo.bak
+pg_restore -U postgres -d basededatos_restaurada -v respaldo.bak
 ```
 4.	Conectarse a la base restaurada y verificar tablas y datos:
 ```bash
-
-psql -U usuario -d basededatos_restaurada
+psql -U postgres -d basededatos_restaurada
 \dt
-SELECT COUNT(*) FROM tabla_importante;
+SELECT COUNT(*) FROM clientes;
 ```
 ### Explicación
 El respaldo lógico crea un volcado que contiene comandos para reconstruir la base de datos. El formato personalizado (-F c) permite restaurar objetos selectivamente con pg_restore.
