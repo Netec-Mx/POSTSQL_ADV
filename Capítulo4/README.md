@@ -132,10 +132,9 @@ Nota:
 - El usuario replicador debe tener permisos para replicación.
 - Verificar que se hayan generado archivos comprimidos en /var/lib/postgresql/respaldos.
 - Para restaurar, detener el servidor y reemplazar el directorio de datos por el contenido del respaldo descomprimido.
-- Iniciar el servidor y verificar funcionamiento:
+- Despues de realizar la recuperación total, iniciar el servidor y verificar funcionamiento:
 ```bash
-sudo systemctl restart postgresql
-```
+
 ### Explicación
 El respaldo físico copia todos los archivos de datos y WAL necesarios para restaurar la base de datos en un estado consistente exacto al momento del respaldo.
 
@@ -186,20 +185,22 @@ Desde la cuenta inicial de login ejecutar el comando:
 2.	Eliminar o mover el directorio de datos actual (normalmente /var/lib/postgresql/14/main o según configuración):
 ```bash
 sudo mv /var/lib/postgresql/14/main /var/lib/postgresql/14/main_old
+
+Crear el nuevo directorio donde sera restaurado el cluster.
 sudo mkdir /var/lib/postgresql/14/main
 ```
 3.	Descomprimir y copiar el respaldo físico al directorio de datos:
-Supongamos que el respaldo está en /ruta/respaldo/base.tar.gz:
+Supongamos que el respaldo está en /var/lib/postgresql/respaldos/base.tar.gz:
 ```bash
 sudo tar -xzf /var/lib/postgresql/respaldos/base.tar.gz -C /var/lib/postgresql/14/main
 
 Restaurar los archivos de WAL:
 sudo tar -xzf /var/lib/postgresql/respaldos/pg_wal.tar.gz -C /var/lib/postgresql/14/main/pg_wal
 ```
-4.	Ajustar permisos del directorio de datos para el usuario postgres:
+4.	Ajustar los permisos y el propietario del directorio de datos para el usuario postgres:
 ```bash
-sudo chown -R postgres:postgres /var/lib/postgresql/14/main
 sudo chmod -R 700 /var/lib/postgresql/14/main
+sudo chown -R postgres:postgres /var/lib/postgresql/14/main
 ```
 5.	Iniciar el servidor PostgreSQL:
 ```bash
