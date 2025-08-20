@@ -299,8 +299,7 @@ barman check produccion
 ## Laboratorio 4.8 – Respaldo y restauración con Barman
 Objetivo
 Ejecutar un respaldo remoto centralizado y restaurarlo en un servidor alterno.
-Requisitos
--	 4.7 completada.
+
 Pasos
 1.	Realizar respaldo:
 ```bash
