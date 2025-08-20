@@ -227,6 +227,7 @@ La restauración desde un respaldo físico completo consiste en reemplazar la ca
 ## Laboratorio 4.5 – Recuperación Point-in-Time (PITR)
 ### Objetivo
 Simular un fallo, y usar respaldos base junto con WAL archivados para recuperar la base de datos a un punto específico en el tiempo.
+Los datos actuales se pierden porque se sobrescribe la base de datos, como precaución mantener el respaldo y WALs del respaldo total.
 ### Requisitos
 - Respaldo base físico reciente (realizado con pg_basebackup).
 - WAL archivados configurados y disponibles.
@@ -240,7 +241,8 @@ sudo systemctl stop postgresql
 3.	Crear un archivo recovery.conf (o modificar postgresql.conf en versiones recientes) con parámetros para la recuperación:
 ```
 restore_command = 'cp /var/lib/postgresql/archive/%f %p'
-recovery_target_time = 'YYYY-MM-DD HH:MM:SS'
+# recovery_target_time = 'YYYY-MM-DD HH:MM:SS'
+recovery_target_time = '2025-08-19 14:30:00'
 ```
 4.	Iniciar el servidor:
 ```bash
@@ -251,52 +253,7 @@ sudo systemctl start postgresql
 ### Explicación
 PITR permite recuperar la base a un momento exacto usando el respaldo base y los WAL archivados. Es una técnica clave para minimizar pérdida de datos tras fallos.
 
-## Laboratorio 4.6 – Recuperación total desde respaldo físico completo (incluyendo WAL)
-
-### Objetivo  
-Restaurar completamente un servidor PostgreSQL usando un respaldo físico completo con `pg_basebackup`, asegurando también la recuperación de los archivos WAL para mantener la consistencia y permitir recuperación hasta el último punto válido.
-
-### Requisitos  
-- Respaldo físico completo generado con `pg_basebackup`, que incluye archivos de datos y WAL.  
-- Acceso administrativo al servidor.  
-- Permisos para detener y arrancar PostgreSQL.
-
-### Pasos
-Los siguiet¿ntes pasos se deben realizar desde la cuenta de login inicial (netec).
-
-1. **Detener el servidor PostgreSQL**:
-```bash
-   sudo systemctl stop postgresql
-```
-2.	Mover o eliminar el directorio de datos actual:
-```bash
-sudo mv /var/lib/postgresql/14/main /var/lib/postgresql/14/main_old
-```
-3.	Restaurar el respaldo físico completo (incluyendo WAL):
--	Si el respaldo fue hecho en formato tar comprimido con WAL incluidos, extraer todo al directorio de datos:
-```bash
-sudo tar -xzf /var/lib/postgresql/respaldos/pg_wal.tar.gz -C /var/lib/postgresql/14/main/pg_wal
-```
-4.	Asegurar que los archivos WAL estén presentes dentro del directorio de datos o en la ubicación configurada para archivado WAL.
--	Si los WAL están en un directorio separado (archivo de archivado), asegurarse que restore_command esté configurado correctamente para recuperarlos durante el arranque.
-5.	Configurar permisos adecuados para el directorio de datos:
-```bash
-sudo chown -R postgres:postgres /var/lib/postgresql/14/main
-sudo chmod -R 700 /var/lib/postgresql/14/main
-```
-6.	Iniciar el servidor PostgreSQL:
-```bash
-sudo systemctl start postgresql
-```
-7.	Verificar el estado y la integridad de la base de datos:
-```bash
-sudo systemctl status postgresql
-psql -U usuario -d basededatos -c "SELECT COUNT(*) FROM tabla_importante;"
-```
-### Explicación
-Los archivos WAL contienen el historial de transacciones y cambios que no se reflejan inmediatamente en los archivos base. Restaurar los WAL junto con los archivos de datos es fundamental para asegurar que la base pueda recuperarse hasta el último punto consistente, evitando corrupción o pérdida de datos.
-
-## Laboratorio 4.7 – Instalación y configuración de Barman
+## Laboratorio 4.6 – Instalación y configuración de Barman
 ### Objetivo
 Instalar Barman y preparar conexión segura con un servidor PostgreSQL.
 ### Requisitos
