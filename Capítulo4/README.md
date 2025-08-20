@@ -140,8 +140,8 @@ El respaldo físico copia todos los archivos de datos y WAL necesarios para rest
 ### Objetivo
 Configurar el archivado de Write-Ahead Logs (WAL) para permitir recuperaciones basadas en logs.
 ### Requisitos
-•	Acceso con permisos para modificar archivos de configuración.
-•	Directorio seguro para almacenar WAL archivados.
+- Acceso con permisos para modificar archivos de configuración.
+- Directorio seguro para almacenar WAL archivados.
 ### Pasos
 1.	Editar el archivo postgresql.conf (ubicación típica: /etc/postgresql/14/main/postgresql.conf):
 
@@ -149,14 +149,13 @@ Activar archivado WAL:
 ```
 wal_level = replica
 archive_mode = on
-archive_command = 'test ! -f /ruta_archivo/%f && cp %p /ruta_archivo/%f'
+archive_command = 'test ! -f /var/lib/postgresql/archive/%f && cp %p /var/lib/postgresql/archive/%f'
 ```
-2.	Crear el directorio para almacenar WAL y asignar permisos adecuados.
-3.	Reiniciar el servidor PostgreSQL para aplicar cambios:
+2.	Reiniciar el servidor PostgreSQL para aplicar cambios:
 ```bash
 sudo systemctl restart postgresql
 ```
-4.	Verificar que los WAL se estén copiando al directorio especificado.
+3.	Verificar que los WAL se estén copiando al directorio especificado.
 ### Explicación
 El archivado WAL es fundamental para realizar recuperaciones punto en el tiempo y para la replicación. El archive_command define cómo se guardan los logs.
 
@@ -175,7 +174,7 @@ sudo systemctl stop postgresql
 2.	Restaurar el respaldo base en el directorio de datos.
 3.	Crear un archivo recovery.conf (o modificar postgresql.conf en versiones recientes) con parámetros para la recuperación:
 ```
-restore_command = 'cp /ruta_archivo/%f %p'
+restore_command = 'cp /var/lib/postgresql/archive/%f %p'
 recovery_target_time = 'YYYY-MM-DD HH:MM:SS'
 ```
 4.	Iniciar el servidor:
