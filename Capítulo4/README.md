@@ -163,9 +163,9 @@ El archivado WAL es fundamental para realizar recuperaciones punto en el tiempo 
 ### Objetivo
 Simular un fallo, y usar respaldos base junto con WAL archivados para recuperar la base de datos a un punto específico en el tiempo.
 ### Requisitos
-•	Respaldo base físico reciente (realizado con pg_basebackup).
-•	WAL archivados configurados y disponibles.
-•	Acceso para detener y arrancar el servidor.
+- Respaldo base físico reciente (realizado con pg_basebackup).
+- WAL archivados configurados y disponibles.
+- Acceso para detener y arrancar el servidor.
 ### Pasos
 1.	Detener el servidor PostgreSQL:
 ```bash
@@ -243,9 +243,10 @@ Restaurar completamente un servidor PostgreSQL usando un respaldo físico comple
 - Permisos para detener y arrancar PostgreSQL.
 
 ### Pasos
+Los siguiet¿ntes pasos se deben realizar desde la cuenta de login inicial (netec).
 
 1. **Detener el servidor PostgreSQL**:
-  ```bash
+```bash
    sudo systemctl stop postgresql
 ```
 2.	Mover o eliminar el directorio de datos actual:
@@ -255,7 +256,7 @@ sudo mv /var/lib/postgresql/14/main /var/lib/postgresql/14/main_old
 3.	Restaurar el respaldo físico completo (incluyendo WAL):
 -	Si el respaldo fue hecho en formato tar comprimido con WAL incluidos, extraer todo al directorio de datos:
 ```bash
-sudo tar -xzf /ruta/respaldo/base_con_wal.tar.gz -C /var/lib/postgresql/14/main
+sudo tar -xzf /var/lib/postgresql/respaldos/pg_wal.tar.gz -C /var/lib/postgresql/14/main/pg_wal
 ```
 4.	Asegurar que los archivos WAL estén presentes dentro del directorio de datos o en la ubicación configurada para archivado WAL.
 -	Si los WAL están en un directorio separado (archivo de archivado), asegurarse que restore_command esté configurado correctamente para recuperarlos durante el arranque.
