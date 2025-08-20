@@ -118,8 +118,7 @@ Realizar un respaldo físico completo de PostgreSQL usando pg_basebackup y exami
   archive_mode = on
   archive_command = 'cp %p /var/lib/postgresql/archive/%f'
   ```
-- Después de cambiar estos parámetros, reinicia PostgreSQL:
-Desde la cuenta inicial de login, ejecutar el comando:
+- Después de cambiar estos parámetros, reinicia PostgreSQL, desde la cuenta inicial de login.
 ```bash
 sudo systemctl restart postgresql
 ```
