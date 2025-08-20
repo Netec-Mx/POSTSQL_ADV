@@ -20,12 +20,15 @@ Realizar un respaldo lógico de una base de datos usando `pg_dump` y restaurar e
 ### Pasos para crear la base de datos ventas
 ### 1. Conectarte a PostgreSQL como superusuario
 ```bash
+sudo -i -u postgres
 psql -U postgres
 ```
 ### 2. Crear la base de datos ventas
 ```sql
 CREATE DATABASE ventas;
+
 Conéctate a la nueva base de datos:
+
 \c ventas
 ```
 ### 3. Crear tablas
@@ -136,9 +139,9 @@ sudo systemctl restart postgresql
 ### Explicación
 El respaldo físico copia todos los archivos de datos y WAL necesarios para restaurar la base de datos en un estado consistente exacto al momento del respaldo.
 
-## Laboratorio 4.3 – Configuración de archivado WAL
+## Laboratorio 4.3 (Opcional)– Verificar la configuración de archivado WAL
 ### Objetivo
-Configurar el archivado de Write-Ahead Logs (WAL) para permitir recuperaciones basadas en logs.
+Verificar la configuración del archivado de Write-Ahead Logs (WAL) para permitir recuperaciones basadas en logs.
 ### Requisitos
 - Acceso con permisos para modificar archivos de configuración.
 - Directorio seguro para almacenar WAL archivados.
