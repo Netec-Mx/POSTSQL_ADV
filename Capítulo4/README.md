@@ -162,34 +162,7 @@ sudo systemctl restart postgresql
 ### Explicación
 El archivado WAL es fundamental para realizar recuperaciones punto en el tiempo y para la replicación. El archive_command define cómo se guardan los logs.
 
-## Laboratorio 4.4 – Recuperación Point-in-Time (PITR)
-### Objetivo
-Simular un fallo, y usar respaldos base junto con WAL archivados para recuperar la base de datos a un punto específico en el tiempo.
-### Requisitos
-- Respaldo base físico reciente (realizado con pg_basebackup).
-- WAL archivados configurados y disponibles.
-- Acceso para detener y arrancar el servidor.
-### Pasos
-1.	Detener el servidor PostgreSQL:
-```bash
-sudo systemctl stop postgresql
-```
-2.	Restaurar el respaldo base en el directorio de datos.
-3.	Crear un archivo recovery.conf (o modificar postgresql.conf en versiones recientes) con parámetros para la recuperación:
-```
-restore_command = 'cp /var/lib/postgresql/archive/%f %p'
-recovery_target_time = 'YYYY-MM-DD HH:MM:SS'
-```
-4.	Iniciar el servidor:
-```bash
-sudo systemctl start postgresql
-```
-5.	Observar los logs para confirmar que la recuperación se realizó hasta el punto deseado.
-6.	Verificar que los datos son consistentes y corresponden a la fecha y hora objetivo.
-### Explicación
-PITR permite recuperar la base a un momento exacto usando el respaldo base y los WAL archivados. Es una técnica clave para minimizar pérdida de datos tras fallos.
-
-## Laboratorio 4.5 – Recuperación total desde respaldo físico completo
+## Laboratorio 4.4 – Recuperación total desde respaldo físico completo
 
 ### Objetivo  
 Restaurar completamente un servidor PostgreSQL usando un respaldo físico completo generado con `pg_basebackup`, para dejar la base de datos en un estado operativo idéntico al momento del respaldo.
@@ -234,6 +207,33 @@ sudo rm -rf /var/lib/postgresql/14/main_old
 ```
 ### Explicación
 La restauración desde un respaldo físico completo consiste en reemplazar la carpeta de datos con una copia exacta de los archivos del servidor en un estado consistente. Este método es rápido y confiable para recuperaciones totales, pero requiere que el servidor esté apagado durante la operación.
+
+## Laboratorio 4.5 – Recuperación Point-in-Time (PITR)
+### Objetivo
+Simular un fallo, y usar respaldos base junto con WAL archivados para recuperar la base de datos a un punto específico en el tiempo.
+### Requisitos
+- Respaldo base físico reciente (realizado con pg_basebackup).
+- WAL archivados configurados y disponibles.
+- Acceso para detener y arrancar el servidor.
+### Pasos
+1.	Detener el servidor PostgreSQL:
+```bash
+sudo systemctl stop postgresql
+```
+2.	Restaurar el respaldo base en el directorio de datos.
+3.	Crear un archivo recovery.conf (o modificar postgresql.conf en versiones recientes) con parámetros para la recuperación:
+```
+restore_command = 'cp /var/lib/postgresql/archive/%f %p'
+recovery_target_time = 'YYYY-MM-DD HH:MM:SS'
+```
+4.	Iniciar el servidor:
+```bash
+sudo systemctl start postgresql
+```
+5.	Observar los logs para confirmar que la recuperación se realizó hasta el punto deseado.
+6.	Verificar que los datos son consistentes y corresponden a la fecha y hora objetivo.
+### Explicación
+PITR permite recuperar la base a un momento exacto usando el respaldo base y los WAL archivados. Es una técnica clave para minimizar pérdida de datos tras fallos.
 
 ## Laboratorio 4.6 – Recuperación total desde respaldo físico completo (incluyendo WAL)
 
