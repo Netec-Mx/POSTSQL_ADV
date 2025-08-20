@@ -262,13 +262,16 @@ Instalar Barman y preparar conexión segura con un servidor PostgreSQL.
 ### Pasos
 1.	Instalar Barman:
 ```bash
-apt install barman barman-cli
+sudo apt install barman barman-cli
+
+Entrar al superusurio de PosgreSQL.
+sudo -i -u postgres psql
 ```
 2.	Crear usuario de replicación en PostgreSQL:
 ```sql
-CREATE ROLE barman WITH REPLICATION LOGIN PASSWORD 'segura';
+CREATE ROLE barman WITH REPLICATION LOGIN PASSWORD 'seguro';
 ```
-3.	Configurar pg_hba.conf:
+3.	Configurar pg_hba.conf con la IP del servidor de respaldos:
 ```bash
 host replication barman 192.168.1.50/32 md5
 ```
@@ -280,7 +283,8 @@ ssh-copy-id barman@192.168.1.20
 ```bash
 [produccion]
 description = "Servidor Producción"
-conninfo = host=192.168.1.20 user=barman dbname=postgres
+#conninfo = host=192.168.1.20 user=barman dbname=postgres
+conninfo = host=localhost user=barman dbname=postgres
 backup_method = postgres
 streaming_archiver = on
 archiver = on
