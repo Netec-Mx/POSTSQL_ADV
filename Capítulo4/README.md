@@ -119,6 +119,7 @@ Realizar un respaldo físico completo de PostgreSQL usando pg_basebackup y exami
   archive_command = 'cp %p /var/lib/postgresql/archive/%f'
   ```
 - Después de cambiar estos parámetros, reinicia PostgreSQL:
+Desde la cuenta inicial de login, ejecutar el comando:
 ```bash
 sudo systemctl restart postgresql
 ```
@@ -147,14 +148,18 @@ Verificar la configuración del archivado de Write-Ahead Logs (WAL) para permiti
 - Directorio seguro para almacenar WAL archivados.
 ### Pasos
 1.	Editar el archivo postgresql.conf (ubicación típica: /etc/postgresql/14/main/postgresql.conf):
-
-Activar archivado WAL:
+Desde la cuenta postgres, activar archivado WAL:
+```bash
+    sudo -i -u postgres
+    nano /etc/postgresql/14/main/postgresql.conf
+```
+Cambiar los siguiente parámetros:
 ```
 wal_level = replica
 archive_mode = on
 archive_command = 'test ! -f /var/lib/postgresql/archive/%f && cp %p /var/lib/postgresql/archive/%f'
 ```
-2.	Reiniciar el servidor PostgreSQL para aplicar cambios:
+2.	Reiniciar el servidor PostgreSQL para aplicar cambios, desde la cuenta inicial de login:
 ```bash
 sudo systemctl restart postgresql
 ```
@@ -174,18 +179,23 @@ Restaurar completamente un servidor PostgreSQL usando un respaldo físico comple
 
 ### Pasos
 
-1. **Detener el servidor PostgreSQL** para permitir restauración:  
+1. **Detener el servidor PostgreSQL** para permitir restauración:
+Desde la cuenta inicial de login ejecutar el comando:
   ```bash
    sudo systemctl stop postgresql
 ```
 2.	Eliminar o mover el directorio de datos actual (normalmente /var/lib/postgresql/14/main o según configuración):
 ```bash
 sudo mv /var/lib/postgresql/14/main /var/lib/postgresql/14/main_old
+sudo mkdir /var/lib/postgresql/14/main
 ```
 3.	Descomprimir y copiar el respaldo físico al directorio de datos:
 Supongamos que el respaldo está en /ruta/respaldo/base.tar.gz:
 ```bash
-sudo tar -xzf /ruta/respaldo/base.tar.gz -C /var/lib/postgresql/14/main
+sudo tar -xzf /var/lib/postgresql/respaldos/base.tar.gz -C /var/lib/postgresql/14/main
+
+Restaurar los archivos de WAL:
+sudo tar -xzf /var/lib/postgresql/respaldos/pg_wal.tar.gz -C /var/lib/postgresql/14/main/pg_wal
 ```
 4.	Ajustar permisos del directorio de datos para el usuario postgres:
 ```bash
@@ -199,7 +209,13 @@ sudo systemctl start postgresql
 6.	Verificar que el servidor esté activo y la base restaurada correctamente:
 ```bash
 sudo systemctl status postgresql
-psql -U usuario -d basededatos -c "SELECT COUNT(*) FROM tabla_importante;"
+sudo -i -u postgres
+```
+```bash
+psql -U postgres -d ventas
+```
+```sql
+    SELECT * FROM clientes;
 ```
 7.	(Opcional) Limpiar respaldo antiguo si todo está correcto:
 ```bash
