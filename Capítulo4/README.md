@@ -256,8 +256,8 @@ PITR permite recuperar la base a un momento exacto usando el respaldo base y los
 ### Objetivo
 Instalar Barman y preparar conexión segura con un servidor PostgreSQL.
 ### Requisitos
--	Servidor Barman en una máquina distinta (solo si va a ser remoto).
--	Acceso SSH y credenciales (solo si va a ser remoto).
+-	Servidor Barman en una máquina distinta.
+-	Acceso SSH y credenciales.
 ### Pasos
 1.	Instalar Barman:
 ```bash
@@ -278,7 +278,7 @@ host replication barman 192.168.1.50/32 md5
 Local:
 host replication barman 192.168.1.50/32 md5
 ```
-4.	Copiar clave SSH a servidor PostgreSQL (solo si va a ser remoto):
+4.	Copiar clave SSH a servidor PostgreSQL:
 ```bash
 ssh-copy-id barman@192.168.1.20
 ```
@@ -296,7 +296,7 @@ archiver = on
 ```bash
 barman check produccion
 ```
-## Laboratorio 4.8 – Respaldo local (o remoto) y restauración con Barman
+## Laboratorio 4.8 – Respaldo y restauración con Barman
 Objetivo
 Ejecutar un respaldo remoto centralizado y restaurarlo en un servidor alterno.
 Requisitos
