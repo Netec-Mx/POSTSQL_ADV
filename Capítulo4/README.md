@@ -32,7 +32,7 @@ Conéctate a la nueva base de datos:
 ```
 ### 3. Crear tablas
 Vamos a usar dos tablas: clientes y pedidos.
--- Tabla de clientes
+- -- Tabla de clientes
 ```sql
 CREATE TABLE clientes (
     id_cliente SERIAL PRIMARY KEY,
