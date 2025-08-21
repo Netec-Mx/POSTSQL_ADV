@@ -38,7 +38,9 @@ listen_addresses = '*'
 ```
 
 ### Paso 4. Configurar pg_hba.conf del maestro
-sudo nano /var/lib/postgresql/maestro/pg_hba.conf
+
+sudo nano /etc/postgresql/maestro/pg_hba.conf 
+
 ```
 Agrega:
 
