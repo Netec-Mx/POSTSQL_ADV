@@ -308,13 +308,13 @@ barman backup producción
 2.	Listar respaldos:
 ```bash
 barman list-backup produccion
+```
 3.	Restaurar último respaldo en otra ruta:
 ```bash
 barman recover produccion latest /var/lib/postgresql/restauración
 ```
 Verificación
 -	Iniciar PostgreSQL en la ruta de restauración y validar datos.
-
 
 ---
 
