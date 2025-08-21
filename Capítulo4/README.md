@@ -132,7 +132,7 @@ Nota:
 - Verificar que se hayan generado archivos comprimidos en /var/lib/postgresql/respaldos.
 - Para restaurar, detener el servidor y reemplazar el directorio de datos por el contenido del respaldo descomprimido.
 - Despues de realizar la recuperación total, iniciar el servidor y verificar funcionamiento:
-```bash
+
 
 ### Explicación
 El respaldo físico copia todos los archivos de datos y WAL necesarios para restaurar la base de datos en un estado consistente exacto al momento del respaldo.
