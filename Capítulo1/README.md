@@ -53,10 +53,9 @@ sudo apt update
 
 ```
 sudo apt install -y postgresql-16 postgresql-client-16
+Este comando crea el clúster 16/main, con su propio directorio de datos.
+sudo pg_createcluster 16 main --start
 ```
-
-Este comando crea el clúster 16/main, con su propio directorio de datos en:
-
 - `/var/lib/postgresql/16/main`
 - `/etc/postgresql/16/main/`
 
