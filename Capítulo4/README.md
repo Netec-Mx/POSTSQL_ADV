@@ -25,9 +25,9 @@ psql -U postgres
 ### 2. Crear la base de datos ventas
 ```sql
 CREATE DATABASE ventas;
-
+```
 Conéctate a la nueva base de datos:
-
+```
 \c ventas
 ```
 ### 3. Crear tablas
@@ -79,7 +79,7 @@ SELECT * FROM pedidos;
   ```bash
    sudo -i -u postgres
    pg_dump -U postgres -F c -f respaldo.bak ventas
-```
+  ```
 2.	Crear una nueva base de datos para restaurar:
 ```bash
 createdb -U postgres basededatos_restaurada
@@ -92,6 +92,8 @@ pg_restore -U postgres -d basededatos_restaurada -v respaldo.bak
 ```bash
 psql -U postgres -d basededatos_restaurada
 \dt
+```
+```sql
 SELECT COUNT(*) FROM clientes;
 ```
 ### Explicación
@@ -180,20 +182,22 @@ Restaurar completamente un servidor PostgreSQL usando un respaldo físico comple
 Desde la cuenta inicial de login ejecutar el comando:
   ```bash
    sudo systemctl stop postgresql
-```
+  ```
 2.	Eliminar o mover el directorio de datos actual (normalmente /var/lib/postgresql/14/main o según configuración):
 ```bash
 sudo mv /var/lib/postgresql/14/main /var/lib/postgresql/14/main_old
-
+```
 Crear el nuevo directorio donde sera restaurado el cluster.
+```bash
 sudo mkdir /var/lib/postgresql/14/main
 ```
 3.	Descomprimir y copiar el respaldo físico al directorio de datos:
 Supongamos que el respaldo está en /var/lib/postgresql/respaldos/base.tar.gz:
 ```bash
 sudo tar -xzf /var/lib/postgresql/respaldos/base.tar.gz -C /var/lib/postgresql/14/main
-
+```
 Restaurar los archivos de WAL:
+```bash
 sudo tar -xzf /var/lib/postgresql/respaldos/pg_wal.tar.gz -C /var/lib/postgresql/14/main/pg_wal
 ```
 4.	Ajustar los permisos y el propietario del directorio de datos para el usuario postgres:
@@ -209,8 +213,6 @@ sudo systemctl start postgresql
 ```bash
 sudo systemctl status postgresql
 sudo -i -u postgres
-```
-```bash
 psql -U postgres -d ventas
 ```
 ```sql
@@ -262,8 +264,9 @@ Instalar Barman y preparar conexión segura con un servidor PostgreSQL.
 1.	Instalar Barman:
 ```bash
 sudo apt install barman barman-cli
-
+```
 Entrar al superusuario de PosgreSQL.
+```bash
 sudo -i -u postgres psql
 ```
 2.	Crear usuario de replicación en PostgreSQL:
@@ -271,11 +274,12 @@ sudo -i -u postgres psql
 CREATE ROLE barman WITH REPLICATION LOGIN PASSWORD 'seguro';
 ```
 3.	Configurar pg_hba.conf con la IP del servidor de respaldos:
-```bash
 Remoto:
+```bash
 host replication barman 192.168.1.50/32 md5
-
+```
 Local:
+```bash
 host replication barman 192.168.1.50/32 md5
 ```
 4.	Copiar clave SSH a servidor PostgreSQL:
@@ -283,7 +287,7 @@ host replication barman 192.168.1.50/32 md5
 ssh-copy-id barman@192.168.1.20
 ```
 5.	Configurar /etc/barman.conf:
-```bash
+```
 [produccion]
 description = "Servidor Producción"
 #conninfo = host=192.168.1.20 user=barman dbname=postgres
