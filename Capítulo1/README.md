@@ -307,37 +307,37 @@ psql
 
 **Paso 2.**	Lista todas las bases de datos:
 
-```sql
+```
 \l
 ```
 
 **Paso 3.**	Conéctate a una base de datos específica (ejemplo: postgres):
 
-```sql
+```
 \c postgres
 ```
     
 **Paso 4.**	Lista todas las tablas en la base de datos actual:
 
-```sql
+```
 \dt
 ```
 
 **Paso 5.**	Lista todos los roles de usuarios:
 
-```sql
+```
 \du
 ```
 
 **Paso 6.**	Muestra ayuda para los metacomandos:
 
-```sql
+```
 \?
 ```
 
 **Paso 7.**	Sal de psql:
 
-```sql
+```
 \q
 ```
 
