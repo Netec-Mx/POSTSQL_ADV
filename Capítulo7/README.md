@@ -43,8 +43,8 @@ Ajustar estos parámetros es fundamental para que PostgreSQL utilice adecuadamen
 ### Objetivo
 Configurar logging detallado para monitorear consultas y analizar el comportamiento de la base de datos.
 ### Requisitos
-•	Acceso para modificar postgresql.conf.
-•	Permisos para reiniciar el servidor.
+- Acceso para modificar postgresql.conf.
+- Permisos para reiniciar el servidor.
 ### Pasos
 1.	Modificar postgresql.conf para activar logging detallado:
     ```ini
@@ -56,9 +56,9 @@ Configurar logging detallado para monitorear consultas y analizar el comportamie
 2.	Reiniciar PostgreSQL:
     ```bash
     sudo systemctl restart postgresql
+    ```
 3.	Realizar algunas consultas desde psql o aplicaciones conectadas.
 4.	Revisar los archivos de log generados en el directorio configurado:
-   ```
     ```bash
     tail -f /var/lib/postgresql/14/main/pg_log/postgresql-*.log
     ```
