@@ -46,6 +46,7 @@ Configurar logging detallado para monitorear consultas y analizar el comportamie
 - Acceso para modificar postgresql.conf.
 - Permisos para reiniciar el servidor.
 ### Pasos
+
 1.	Modificar postgresql.conf para activar logging detallado:
     ```ini
     log_statement = 'all'
