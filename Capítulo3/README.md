@@ -180,15 +180,28 @@ VACUUM limpia espacio ocupado por versiones antiguas de filas (tuplas muertas) p
 
 ## Laboratorio 3.5 –Liberación de espacio con VACUUM
 ### Objetivo
-Entender la función de VACUUM FULL para eliminar filas obsoletas para mantener el espacio y el rendimiento de una tabla.
+Entender la función de VACUUM FULL para eliminar filas muertas para mantener el espacio y rendimiento de una tabla.
 ### Requisitos
 - PostgreSQL en ejecución.
 - Tabla grande con muchas tuplas muertas.
 ### Pasos
-1.	Realizar múltiples actualizaciones y eliminaciones en la tabla para generar filas muertas:
+1.	Consulta las tablas y el numero de registros que tiene cada una de ellas:
+   
     ```sql
-    UPDATE cuentas SET saldo = saldo + 50 WHERE titular = 'Ana';
-    DELETE FROM cuentas WHERE titular = 'Carlos'; -- Si existe
+SELECT
+    table_name,
+    (xpath('/row/cnt/text()', xml_count))[1]::text::bigint AS row_count
+FROM (
+    SELECT
+        table_name,
+        query_to_xml(format('SELECT count(*) AS cnt FROM %I.%I', table_schema, table_name), true, true, '') AS xml_count
+    FROM
+        information_schema.tables
+    WHERE                    
+        table_schema = current_schema()
+        AND table_type = 'BASE TABLE'
+) AS sub
+ORDER BY table_name;
     ```
 2.	Ejecutar manualmente VACUUM:
     ```sql
