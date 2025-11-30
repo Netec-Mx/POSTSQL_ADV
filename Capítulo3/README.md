@@ -178,7 +178,7 @@ VACUUM limpia espacio ocupado por versiones antiguas de filas (tuplas muertas) p
 
 ---
 
-## Laboratorio 3.5 –Liberación de espacio con VACUUM
+## Laboratorio 3.5 –Liberación de espacio con VACUUM FULL
 ### Objetivo
 Entender la función de VACUUM FULL para eliminar filas muertas para mantener el espacio y rendimiento de una tabla.
 ### Requisitos
@@ -238,8 +238,7 @@ Entender la función de VACUUM FULL para eliminar filas muertas para mantener el
       y el tamaño real de la tabla (total_size_with_indexes).
 
 
-4.	Consultar parámetros relacionados con autovacuum:
-   - Realiza un VACUUM FULL sobre la tabla donde eliminaste los registros.
+4.	Realiza un VACUUM FULL sobre la tabla donde eliminaste los registros.
      
     ```sql
       VACUUM FULL clientes;
