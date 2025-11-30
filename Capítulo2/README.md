@@ -153,8 +153,8 @@ Si bien los Page Splits son necesarios para mantener la integridad del índice, 
 - Para reducir la frecuencia de los Page Splits, se utiliza la opción de almacenamiento fillfactor al crear el índice.
 
 - Índice con fillfactor para optimizar inserciones.
-- ¿Qué es fillfactor?
-fillfactor (factor de llenado) es un parámetro que le dice al sistema de base de datos (típicamente PostgreSQL, donde esta sintaxis es común) qué porcentaje de cada página del índice debe llenarse inicialmente cuando se crea el índice.
+  
+- El fillfactor (factor de llenado) es un parámetro que le dice al sistema de base de datos (típicamente PostgreSQL, donde esta sintaxis es común) qué porcentaje de cada página del índice debe llenarse inicialmente cuando se crea el índice.
 
 El valor predeterminado suele ser 100 (es decir, la página se llena por completo), o 90 si se especifica en la configuración del servidor.
 
