@@ -43,7 +43,9 @@ FROM generate_series(1, 1000000);
 
 ```sql
 CREATE INDEX idx_clientes_apellido ON clientes (apellido);
+
 Consulta de prueba:
+
 EXPLAIN (ANALYZE, BUFFERS)
 SELECT * FROM clientes WHERE apellido = 'García';
 ```
