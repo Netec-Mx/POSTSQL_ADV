@@ -100,7 +100,7 @@ Comparación:
 
 ```sql
 EXPLAIN (ANALYZE, BUFFERS)
-SELECT * FROM clientes WHERE LOWER(apellido) = 'garcía';
+SELECT * FROM clientes WHERE apellido = 'garcía';
 ```
 
 - Con índice de expresión
