@@ -114,7 +114,7 @@ Realizar un respaldo físico completo de PostgreSQL usando pg_basebackup y exami
   ```bash
       mkdir /var/lib/postgresql/archive
   ```
-  - Editar el archivo /etc/postgresql/14/main/postgresql.conf con los siguientes parametros:
+  - Editar el archivo /etc/postgresql/16/main/postgresql.conf con los siguientes parametros:
   ```
   wal_level = replica
   archive_mode = on
@@ -151,7 +151,7 @@ Verificar la configuración del archivado de Write-Ahead Logs (WAL) para permiti
 Desde la cuenta postgres, activar archivado WAL:
 ```bash
     sudo -i -u postgres
-    nano /etc/postgresql/14/main/postgresql.conf
+    nano /etc/postgresql/16/main/postgresql.conf
 ```
 Cambiar los siguiente parámetros:
 ```
@@ -186,7 +186,7 @@ Desde la cuenta inicial de login ejecutar el comando:
   ```
 2.	Eliminar o mover el directorio de datos actual (normalmente /var/lib/postgresql/14/main o según configuración):
 ```bash
-sudo mv /var/lib/postgresql/14/main /var/lib/postgresql/14/main_old
+sudo mv /var/lib/postgresql/16/main /var/lib/postgresql/14/main_old
 ```
 Crear el nuevo directorio donde sera restaurado el cluster.
 ```bash
