@@ -169,7 +169,9 @@ SELECT * FROM clientes WHERE apellido = 'Ramírez';
 
 ```sql
 CREATE INDEX idx_clientes_apellido_include ON clientes (apellido) INCLUDE (nombre);
+
 Consulta:
+
 EXPLAIN (ANALYZE, BUFFERS)
 SELECT apellido, nombre FROM clientes WHERE apellido = 'López';
 ```
