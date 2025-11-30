@@ -238,20 +238,17 @@ Entender la función de VACUUM FULL para eliminar filas muertas para mantener el
       y el tamaño real de la tabla (total_size_with_indexes).
 
 
-5.	Consultar parámetros relacionados con autovacuum:
-
+4.	Consultar parámetros relacionados con autovacuum:
+   - Realiza un VACUUM FULL sobre la tabla donde eliminaste los registros.
+     
     ```sql
-    SHOW autovacuum;
-    SHOW autovacuum_vacuum_threshold;
-    SHOW autovacuum_vacuum_scale_factor;
+    VACUUM FULL clientes;
     ```
-6.	Simular actividad intensa para forzar autovacuum (puede usar scripts o varias actualizaciones).
-7.	Revisar logs para verificar ejecución de autovacuum o usar vistas del sistema:
-    ```sql
-    SELECT * FROM pg_stat_activity WHERE query LIKE '%autovacuum%';
-    ```
+    
+5.	Vuelve a verificar el espacio que ocupa la tabla y compara el tamaño que tenia antes del vacuum full.
+   
 #### Explicación
-VACUUM limpia espacio ocupado por versiones antiguas de filas (tuplas muertas) para evitar crecimiento descontrolado de tablas y mantener performance. Autovacuum automatiza esta tarea.
+VACUUM libera el espacio ocupado por versiones antiguas de filas (tuplas muertas) para evitar crecimiento descontrolado de tablas y mantener performance. Autovacuum no realiza esta tarea.
 
 ---
 
