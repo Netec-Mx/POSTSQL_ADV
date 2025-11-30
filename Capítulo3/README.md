@@ -19,7 +19,10 @@ Comprender el funcionamiento básico de las transacciones en PostgreSQL mediante
 
 1. Acceder a `psql` y seleccionar la base de datos:
    ```bash
-   psql -U usuario -d basededatos
+   Sintaxis: psql -U usuario -d basededatos
+   
+   -- Usa la base de datos default y el usuario postgres para esta práctica.
+   $ sudo -i -u postgres psql
    ```
 2.	Crear una tabla simple para pruebas:
     ```sql
