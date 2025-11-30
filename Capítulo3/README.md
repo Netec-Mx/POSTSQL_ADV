@@ -106,6 +106,14 @@ Observar cómo PostgreSQL maneja versiones múltiples de filas para permitir con
 1.	En la sesión 1, ejecutar una consulta para obtener xmin y xmax (identificadores de versión):
     ```sql
     SELECT id, titular, saldo, xmin, xmax FROM cuentas;
+
+    postgres=# SELECT id, titular, saldo, xmin, xmax FROM cuentas;
+    
+                id | titular | saldo | xmin | xmax 
+               ----+---------+-------+------+------
+                 2 | Ana     |  1500 |  843 |    0
+                 1 | Juan    | 20000 |  845 |    0
+               (2 rows)
     ```
 2.	En la sesión 2, iniciar transacción y actualizar una fila:
     ```sql
@@ -113,9 +121,26 @@ Observar cómo PostgreSQL maneja versiones múltiples de filas para permitir con
     UPDATE cuentas SET saldo = saldo + 200 WHERE titular = 'Juan';
     ```
 3.	En la sesión 1, volver a consultar la tabla con xmin y xmax.
-4.	Observar que la fila tiene una versión nueva (nuevo xmin) mientras la antigua persiste visible para la sesión 1.
-5.	En la sesión 2, hacer COMMIT.
-6.	En la sesión 1, consultar nuevamente y notar el cambio en versiones.
+    ```sql   
+    postgres=# SELECT id, titular, saldo, xmin, xmax FROM cuentas;
+    
+                id | titular | saldo | xmin | xmax 
+               ----+---------+-------+------+------
+                 2 | Ana     |  1500 |  843 |    0
+                 1 | Juan    | 20000 |  845 |  846
+               (2 rows)
+    ```
+5.	Observar que la fila tiene una versión nueva (xmax) mientras la antigua persiste visible para la sesión 1.
+6.	En la sesión 2, hacer COMMIT.
+7.	En la sesión 1, consultar nuevamente y notar el cambio en versiones.
+       ```sql
+      postgres=# SELECT id, titular, saldo, xmin, xmax FROM cuentas;
+       id | titular | saldo | xmin | xmax 
+      ----+---------+-------+------+------
+        2 | Ana     |  1500 |  843 |    0
+        1 | Juan    | 20200 |  846 |    0
+      (2 rows)
+    ```
 #### Explicación
 MVCC permite que diferentes transacciones vean versiones distintas de una fila para evitar bloqueos, manteniendo consistencia.
 
