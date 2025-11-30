@@ -132,6 +132,26 @@ SELECT COUNT(*) FROM clientes;
 
 **Paso 3.** Inserciones masivas y page splits.
 
+¿Cómo Ocurre un Page Split?
+
+Los índices B-tree (la implementación por defecto en PostgreSQL) organizan los datos de forma ordenada en páginas. Cada página tiene un espacio limitado (típicamente 8Kb).
+
+La Inserción: Una operación de INSERT o UPDATE requiere que se añada una nueva entrada al índice.
+La Búsqueda: El motor de PostgreSQL encuentra la página del índice donde, según la clave, debería ir la nueva entrada.
+El Desbordamiento: Si esa página de índice ya está completamente llena (no hay espacio para la nueva entrada).
+
+La División (Split): 
+
+PostgreSQL realiza un Page Split:Crea una nueva página de índice vacía. Mueve aproximadamente la mitad de las entradas de la página original a la nueva página. Inserta la nueva entrada en la página apropiada. Actualiza la página padre (el nivel superior del árbol) con la clave de la nueva página para mantener la navegación correcta del índice.
+
+📉 Impacto en el Rendimiento:
+
+Si bien los Page Splits son necesarios para mantener la integridad del índice, son operaciones costosas y representan una forma de fragmentación que impacta negativamente el rendimiento.
+
+- Mitigación: El fillfactor
+  
+- Para reducir la frecuencia de los Page Splits, se utiliza la opción de almacenamiento fillfactor al crear el índice.
+
 - Índice con fillfactor para optimizar inserciones.
 - ¿Qué es fillfactor?
 fillfactor (factor de llenado) es un parámetro que le dice al sistema de base de datos (típicamente PostgreSQL, donde esta sintaxis es común) qué porcentaje de cada página del índice debe llenarse inicialmente cuando se crea el índice.
