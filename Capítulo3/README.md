@@ -188,20 +188,20 @@ Entender la función de VACUUM FULL para eliminar filas muertas para mantener el
 1.	Consulta las tablas y el numero de registros que tiene cada una de ellas:
    
     ```sql
-SELECT
-    table_name,
-    (xpath('/row/cnt/text()', xml_count))[1]::text::bigint AS row_count
-FROM (
-    SELECT
-        table_name,
-        query_to_xml(format('SELECT count(*) AS cnt FROM %I.%I', table_schema, table_name), true, true, '') AS xml_count
-    FROM
-        information_schema.tables
-    WHERE                    
-        table_schema = current_schema()
-        AND table_type = 'BASE TABLE'
-) AS sub
-ORDER BY table_name;
+      SELECT
+          table_name,
+          (xpath('/row/cnt/text()', xml_count))[1]::text::bigint AS row_count
+      FROM (
+          SELECT
+              table_name,
+              query_to_xml(format('SELECT count(*) AS cnt FROM %I.%I', table_schema, table_name), true, true, '') AS xml_count
+          FROM
+              information_schema.tables
+          WHERE                    
+              table_schema = current_schema()
+              AND table_type = 'BASE TABLE'
+      ) AS sub
+      ORDER BY table_name;
     ```
 2.	Ejecutar manualmente VACUUM:
     ```sql
