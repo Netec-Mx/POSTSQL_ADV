@@ -84,8 +84,9 @@ Simular bloqueos pesimistas en PostgreSQL para entender cómo se gestionan confl
 3.	En la sesión 2, intentar actualizar la misma fila:
    
 - Esta operación quedará bloqueada esperando a que la sesión 1 termine.
-  UPDATE cuentas SET saldo=20000 WHERE titular='Juan';
-  
+   ```sql
+   UPDATE cuentas SET saldo=20000 WHERE titular='Juan';
+   ```  
 4.	Volver a sesión 1 y finalizar la transacción con:
     ```sql
     COMMIT;
