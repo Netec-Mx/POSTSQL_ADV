@@ -186,6 +186,21 @@ FROM generate_series(1,100000);
 
 👉 Usa pg_stat_all_indexes para observar crecimiento y validación de page splits.
 
+```sql
+SELECT
+    relname AS index_name,
+    idx_scan,             
+    idx_tup_fetch,
+    pg_relation_size(relid) AS index_size_bytes,
+    pg_size_pretty(pg_relation_size(relid)) AS index_size_pretty
+FROM
+    pg_stat_all_indexes
+WHERE
+    schemaname = 'public'
+    AND indexrelname = 'idx_clientes_fecha_registro'
+    AND relname = 'clientes';
+```
+
 ## Tarea 3. Interpretación avanzada con EXPLAIN.
 
 **Paso 1.** Métricas críticas.
@@ -336,7 +351,7 @@ Al finalizar la práctica, serás capaz de:
 **Preparación de datos:**
 
 ```sql
-CREATE TABLE clientes (
+CREATE TABLE clientes_nueva (
     id SERIAL PRIMARY KEY,
     nombre TEXT,
     apellido TEXT,
@@ -348,7 +363,7 @@ CREATE TABLE clientes (
 - Inserta 1 millón de registros de prueba.
 
 ```sql
-INSERT INTO clientes (nombre, apellido, activo, fecha_registro)
+INSERT INTO clientes_nueva (nombre, apellido, activo, fecha_registro)
 SELECT 
     md5(random()::text),
     (ARRAY['García','López','Hernández','Martínez','Ramírez'])[floor(random()*5)+1],
@@ -362,16 +377,16 @@ FROM generate_series(1,1000000);
 ```
 Los alumnos deben ejecutar estas consultas representativas:
 1.	Búsqueda exacta por apellido
-2.	SELECT * FROM clientes WHERE apellido = 'García';
+2.	SELECT * FROM clientes_nueva WHERE apellido = 'García';
 3.	Búsqueda combinada (apellido + nombre inicial)
-4.	SELECT * FROM clientes 
+4.	SELECT * FROM clientes_nueva 
 5.	WHERE apellido = 'Martínez' AND nombre LIKE 'a%';
 6.	Búsqueda solo de clientes activos
-7.	SELECT * FROM clientes WHERE activo = true;
+7.	SELECT * FROM clientes_nueva WHERE activo = true;
 8.	Búsqueda case-insensitive
-9.	SELECT * FROM clientes WHERE LOWER(apellido) = 'lópez';
+9.	SELECT * FROM clientes_nueva WHERE LOWER(apellido) = 'lópez';
 10.	Consulta de reporte parcial (solo columnas específicas)
-11.	SELECT apellido, nombre FROM clientes WHERE apellido = 'Ramírez';
+11.	SELECT apellido, nombre FROM clientes_nueva WHERE apellido = 'Ramírez';
 ```
 
 **Parte 2. Creación de índices avanzados.**
@@ -379,16 +394,16 @@ Los alumnos deben ejecutar estas consultas representativas:
 ```
 El alumno deberá crear y evaluar los siguientes índices:
 1.	Índice estándar
-2.	CREATE INDEX idx_apellido ON clientes (apellido);
+2.	CREATE INDEX idx_apellido ON clientes_nueva (apellido);
 3.	Índice multicolumna
-4.	CREATE INDEX idx_apellido_nombre ON clientes (apellido, nombre);
+4.	CREATE INDEX idx_apellido_nombre ON clientes_nueva (apellido, nombre);
 5.	Índice parcial
-6.	CREATE INDEX idx_activos ON clientes (apellido)
+6.	CREATE INDEX idx_activos ON clientes_nueva (apellido)
 7.	WHERE activo = true;
 8.	Índice sobre expresión
-9.	CREATE INDEX idx_apellido_lower ON clientes (LOWER(apellido));
+9.	CREATE INDEX idx_apellido_lower ON clientes_nueva (LOWER(apellido));
 10.	Índice covering
-11.	CREATE INDEX idx_apellido_include ON clientes (apellido) INCLUDE (nombre);
+11.	CREATE INDEX idx_apellido_include ON clientes_nueva (apellido) INCLUDE (nombre);
 ```
 
 **Parte 3. Medición del impacto**
