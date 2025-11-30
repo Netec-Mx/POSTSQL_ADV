@@ -184,6 +184,8 @@ SELECT * FROM clientes WHERE apellido = 'Ramírez';
 
 **Paso 2.** Índices covering (INCLUDE).
 
+Los Índices Covering (o Índices con columnas incluidas/INCLUDE) sirven para permitir que la base de datos obtenga todos los datos necesarios para una consulta directamente desde la estructura del índice, sin tener que acceder a la tabla principal (heap) para buscar el resto de la información. Esto resulta en una mejora significativa del rendimiento para las consultas que utilizan las columnas indexadas y las columnas incluidas.
+
 ```sql
 CREATE INDEX idx_clientes_apellido_include ON clientes (apellido) INCLUDE (nombre);
 
