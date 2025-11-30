@@ -225,6 +225,7 @@ Entender la función de VACUUM FULL para eliminar filas muertas para mantener el
        pg_stat_user_tables
    ORDER BY
        pg_total_relation_size(relid) DESC;
+   ```
 
             table_name   | table_size | total_size_with_indexes 
          ----------------+------------+-------------------------
@@ -235,7 +236,7 @@ Entender la función de VACUUM FULL para eliminar filas muertas para mantener el
 
       Observa el tamaño de los renglones de la tabla (table_size) 
       y el tamaño real de la tabla (total_size_with_indexes).
-     ```
+
 
 5.	Consultar parámetros relacionados con autovacuum:
 
