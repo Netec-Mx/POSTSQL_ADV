@@ -210,10 +210,13 @@ Entender la función de VACUUM FULL para eliminar filas muertas para mantener el
        DELETE FROM clientes WHERE id>500000;
 
     -- Vuelve a consultar el numero de registros que tiene cada tabla (paso 1).
+    
     La tabla debe de tener la mitad de sus registros.
     ```
+    
 3.	Calcula el espacio que ocupa cada tabla.
-    ```sql
+   
+   ```sql
    SELECT
        relname AS table_name,
        pg_size_pretty(pg_relation_size(relid)) AS table_size,
@@ -232,10 +235,7 @@ Entender la función de VACUUM FULL para eliminar filas muertas para mantener el
 
       Observa el tamaño de los renglones de la tabla (table_size) 
       y el tamaño real de la tabla (total_size_with_indexes).
-
-
-       
-  ```
+     ```
 5.	Consultar parámetros relacionados con autovacuum:
     ```sql
     SHOW autovacuum;
