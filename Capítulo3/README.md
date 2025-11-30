@@ -242,13 +242,13 @@ Entender la función de VACUUM FULL para eliminar filas muertas para mantener el
    - Realiza un VACUUM FULL sobre la tabla donde eliminaste los registros.
      
     ```sql
-    VACUUM FULL clientes;
+      VACUUM FULL clientes;
     ```
     
 5.	Vuelve a verificar el espacio que ocupa la tabla y compara el tamaño que tenia antes del vacuum full.
    
 #### Explicación
-VACUUM libera el espacio ocupado por versiones antiguas de filas (tuplas muertas) para evitar crecimiento descontrolado de tablas y mantener performance. Autovacuum no realiza esta tarea.
+VACUUM FULL libera el espacio ocupado por versiones antiguas de filas (tuplas muertas) para evitar crecimiento descontrolado de tablas y mantener performance, esta operación debe de realizarse en una ventana de mantenimento debido a que la tabla queda bloqueada totalmente mientras se lleva a cabo el proceso.
 
 ---
 
