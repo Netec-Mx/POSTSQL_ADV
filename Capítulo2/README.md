@@ -58,7 +58,9 @@ SELECT * FROM clientes WHERE apellido = 'García';
 
 ```sql
 CREATE INDEX idx_clientes_apellido_nombre ON clientes (apellido, nombre);
+
 Consulta de prueba:
+
 EXPLAIN (ANALYZE, BUFFERS)
 SELECT * 
 FROM clientes 
@@ -74,7 +76,9 @@ WHERE apellido = 'García' AND nombre LIKE 'a%';
 ```sql
 CREATE INDEX idx_clientes_activos ON clientes (apellido)
 WHERE activo = true;
+
 Consulta de prueba:
+
 EXPLAIN (ANALYZE, BUFFERS)
 SELECT * 
 FROM clientes 
@@ -200,7 +204,7 @@ Tendrás salida con estimaciones y resultados reales. Interprétala así:
 -	Bitmap Index Scan → el índice devuelve posiciones de páginas, se agrupan y luego se leen en bloque.
 ➝ Eficiente para condiciones que devuelven muchas filas.
 
-✔️ Pregunta: **¿el plan usó índice cuando esperabas?**
+✔️ Pregunta: **¿En el ejercicio, el plan usó un índice cuando esperabas?**
 
 **2. Costos estimados**
 Cada operación tiene: `(cost=0.29..8.30 rows=5 width=64)`.
@@ -209,7 +213,7 @@ Cada operación tiene: `(cost=0.29..8.30 rows=5 width=64)`.
 -	rows=5 → filas estimadas.
 -	width=64 → tamaño medio de cada fila (bytes).
 
-✔️ Pregunta: **¿la estimación de filas (rows) se acerca a la realidad?** Si no, revisar estadísticas con ANALYZE.
+✔️ Pregunta: **¿La estimación de filas (rows) se acerca a la realidad?** Si no, revisar estadísticas con ANALYZE.
 
 **3. Resultados reales**
 
@@ -218,7 +222,7 @@ Ejemplo: `(actual time=0.020..0.025 rows=5 loops=1)`.
 -	rows=5 → filas reales devueltas.
 -	loops=1 → número de veces que se ejecutó este plan.
 
-✔️ Pregunta: **¿las filas reales coinciden con las estimadas?** Si no, el optimizador puede elegir mal los planes.
+✔️ Pregunta: **¿Las filas reales coinciden con las estimadas?** Si no, el optimizador puede elegir mal los planes.
 
 **4. Métricas críticas**
 -	Index Cond → condición usada en el índice.
@@ -228,7 +232,7 @@ Ejemplo: `(actual time=0.020..0.025 rows=5 loops=1)`.
 -	Heap Fetches → accesos a la tabla después de usar el índice.
 ➝ Demasiados fetches → evalúa índices covering con INCLUDE.
 
-✔️ Pregunta: **¿estás filtrando demasiado tarde? ¿se puede optimizar con índices parciales o covering?**
+✔️ Pregunta: **¿Estás filtrando demasiado tarde? ¿se puede optimizar con índices parciales o covering?**
 
 **5. Estadísticas de memoria y cache (BUFFERS)**
 
@@ -238,14 +242,14 @@ Con (BUFFERS) aparecen:
 -	shared dirtied → páginas modificadas.
 -	shared written → páginas escritas.
 
-✔️ Pregunta: **¿hay demasiados read?** → mejorar índices, aumentar cache (shared_buffers) o reescribir la consulta.
+✔️ Pregunta: **¿Hay demasiadas lecturas -read-?** → mejorar índices, aumentar cache (shared_buffers) o reescribir la consulta.
 
 **6. Escalabilidad y bucles**
 -	Si loops es alto → la operación se repite muchas veces.
 ➝ Común en Nested Loop. Puede explotar con millones de filas.
 -	Si ves Hash Join o Merge Join, revisa si los índices permiten un Index Nested Loop más eficiente.
 
-✔️ Pregunta: **¿el plan es escalable para millones de filas o solo funciona en pruebas pequeñas?**
+✔️ Pregunta: **¿El plan es escalable para millones de filas o solo funciona en pruebas pequeñas?**
 
 **7. Diagnóstico final**
 -	¿El plan usó el índice correcto?
