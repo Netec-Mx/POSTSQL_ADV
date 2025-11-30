@@ -236,7 +236,9 @@ Entender la función de VACUUM FULL para eliminar filas muertas para mantener el
       Observa el tamaño de los renglones de la tabla (table_size) 
       y el tamaño real de la tabla (total_size_with_indexes).
      ```
+
 5.	Consultar parámetros relacionados con autovacuum:
+
     ```sql
     SHOW autovacuum;
     SHOW autovacuum_vacuum_threshold;
