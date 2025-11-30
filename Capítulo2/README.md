@@ -133,6 +133,23 @@ SELECT COUNT(*) FROM clientes;
 **Paso 3.** Inserciones masivas y page splits.
 
 - Índice con fillfactor para optimizar inserciones.
+- ¿Qué es fillfactor?
+fillfactor (factor de llenado) es un parámetro que le dice al sistema de base de datos (típicamente PostgreSQL, donde esta sintaxis es común) qué porcentaje de cada página del índice debe llenarse inicialmente cuando se crea el índice.
+
+El valor predeterminado suele ser 100 (es decir, la página se llena por completo), o 90 si se especifica en la configuración del servidor.
+
+Si estableces fillfactor = 70, significa que cuando el índice se crea o se reconstruye, el sistema solo llenará el 70% de cada página, dejando el 30% restante como espacio libre.
+
+¿Por qué usar un fillfactor menor a 100?
+Dejar espacio libre tiene un propósito de rendimiento y mantenimiento:
+
+Reduce la fragmentación y las divisiones de página (Page Splits): Cuando se insertan nuevas filas en la tabla (o se actualizan filas existentes) y esto requiere que el índice se modifique, a menudo se necesita agregar nuevas entradas en las páginas del índice. Si una página está llena (fillfactor = 100), la base de datos debe realizar una costosa operación de "división de página" (page split) para hacer espacio. El espacio libre (el 30% en tu caso) permite que las nuevas entradas se agreguen directamente en la página, evitando la división y mejorando el rendimiento de escritura (INSERT/UPDATE).
+
+Mantiene la velocidad de lectura: Al evitar las divisiones de página, se mantiene una estructura de índice más compacta y menos fragmentada, lo que puede resultar en una mejor velocidad de lectura (SELECT) a largo plazo, ya que las entradas relacionadas están físicamente más cerca.
+
+Inconveniente:
+
+El inconveniente es que un índice con un fillfactor bajo (como 70) ocupa más espacio en disco desde el principio, ya que el 30% de cada página está vacío. Es un compromiso entre el espacio en disco y el rendimiento de escritura.
 
 ```sql
 CREATE INDEX idx_clientes_fecha_registro
