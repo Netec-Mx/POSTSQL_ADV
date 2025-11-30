@@ -203,19 +203,47 @@ Entender la función de VACUUM FULL para eliminar filas muertas para mantener el
       ) AS sub
       ORDER BY table_name;
     ```
-2.	Ejecutar manualmente VACUUM:
+2.	Elige una de las tablas grandes y elimina aproximadamente la mitad de sus renglones:
     ```sql
-    VACUUM VERBOSE cuentas;
+    -- Por ejemplo:
+
+       DELETE FROM clientes WHERE id>500000;
+
+    -- Vuelve a consultar el numero de registros que tiene cada tabla (paso 1).
+    La tabla debe de tener la mitad de sus registros.
     ```
-3.	Observar el reporte detallado del proceso.
-4.	Consultar parámetros relacionados con autovacuum:
+3.	Calcula el espacio que ocupa cada tabla.
+    ```sql
+   SELECT
+       relname AS table_name,
+       pg_size_pretty(pg_relation_size(relid)) AS table_size,
+       pg_size_pretty(pg_total_relation_size(relid)) AS total_size_with_indexes
+   FROM
+       pg_stat_user_tables
+   ORDER BY
+       pg_total_relation_size(relid) DESC;
+
+            table_name   | table_size | total_size_with_indexes 
+         ----------------+------------+-------------------------
+          clientes_nueva | 81 MB      | 102 MB
+          clientes       | 40 MB      | 94 MB
+          cuentas        | 8192 bytes | 32 kB
+         (3 rows)
+
+      Observa el tamaño de los renglones de la tabla (table_size) 
+      y el tamaño real de la tabla (total_size_with_indexes).
+
+
+       
+  ```
+5.	Consultar parámetros relacionados con autovacuum:
     ```sql
     SHOW autovacuum;
     SHOW autovacuum_vacuum_threshold;
     SHOW autovacuum_vacuum_scale_factor;
     ```
-5.	Simular actividad intensa para forzar autovacuum (puede usar scripts o varias actualizaciones).
-6.	Revisar logs para verificar ejecución de autovacuum o usar vistas del sistema:
+6.	Simular actividad intensa para forzar autovacuum (puede usar scripts o varias actualizaciones).
+7.	Revisar logs para verificar ejecución de autovacuum o usar vistas del sistema:
     ```sql
     SELECT * FROM pg_stat_activity WHERE query LIKE '%autovacuum%';
     ```
@@ -223,20 +251,7 @@ Entender la función de VACUUM FULL para eliminar filas muertas para mantener el
 VACUUM limpia espacio ocupado por versiones antiguas de filas (tuplas muertas) para evitar crecimiento descontrolado de tablas y mantener performance. Autovacuum automatiza esta tarea.
 
 ---
-SELECT
-    table_name,
-    (xpath('/row/cnt/text()', xml_count))[1]::text::bigint AS row_count
-FROM (
-    SELECT
-        table_name,
-        query_to_xml(format('SELECT count(*) AS cnt FROM %I.%I', table_schema, table_name), true, true, '') AS xml_count
-    FROM
-        information_schema.tables
-    WHERE
-        table_schema = current_schema()
-        AND table_type = 'BASE TABLE'
-) AS sub
-ORDER BY table_name;
+
 
 
 
