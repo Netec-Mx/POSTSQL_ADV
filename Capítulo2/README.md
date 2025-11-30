@@ -197,7 +197,7 @@ SELECT apellido, nombre FROM clientes WHERE apellido = 'López';
 
 👉 Observa cómo ya no necesita Heap Fetches.
 
-## Tarea del capítulo:
+## Tarea final del capítulo:
 
 1.	Diseña un set de consultas frecuentes (por ejemplo: búsquedas por apellido, búsquedas por clientes activos, búsquedas case-insensitive).
 2.	Crea diferentes tipos de índices (estándar, multicolumna, parcial, expresión, covering).
