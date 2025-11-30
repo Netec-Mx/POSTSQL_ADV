@@ -19,8 +19,7 @@ Realizar un respaldo lógico de una base de datos usando `pg_dump` y restaurar e
 ### Pasos para crear la base de datos ventas
 ### 1. Conectarte a PostgreSQL como superusuario
 ```bash
-sudo -i -u postgres
-psql -U postgres
+% sudo -i -u postgres psql
 ```
 ### 2. Crear la base de datos ventas
 ```sql
@@ -71,6 +70,7 @@ INSERT INTO pedidos (id_cliente, fecha, monto, estado) VALUES
 ```sql
 SELECT * FROM clientes;
 SELECT * FROM pedidos;
+\q
 ```
 
 ### Pasos para realizar el laboratorio 4.1
