@@ -94,7 +94,8 @@ psql -U postgres -d basededatos_restaurada
 \dt
 ```
 ```sql
-SELECT COUNT(*) FROM clientes;
+SELECT * FROM clientes;
+SELECT * FROM pedidos;
 ```
 ### Explicación
 El respaldo lógico crea un volcado que contiene comandos para reconstruir la base de datos. El formato personalizado (-F c) permite restaurar objetos selectivamente con pg_restore.
