@@ -146,7 +146,7 @@ Nota:
 ### Explicación
 El respaldo físico copia todos los archivos de datos y WAL necesarios para restaurar la base de datos en un estado consistente exacto al momento del respaldo.
 
-## Laboratorio 4.3 (Opcional, solo en caso de que no lo haya configurado)– Verificar la configuración de archivado WAL
+## Laboratorio 4.3 (Opcional)– Verificar la configuración de archivado WAL
 ### Objetivo
 Verificar la configuración del archivado de Write-Ahead Logs (WAL) para permitir recuperaciones basadas en logs.
 ### Requisitos
@@ -171,7 +171,8 @@ sudo systemctl restart postgresql
 ```
 3.	Verificar que los WAL se estén copiando al directorio especificado.
 ### Explicación
-El archivado WAL es fundamental para realizar recuperaciones punto en el tiempo y para la replicación. El archive_command define cómo se guardan los logs.
+- El archivado WAL es fundamental para realizar recuperaciones punto en el tiempo y para la replicación. El archive_command define cómo se guardan los logs.
+- Si no configuras el archivado de WAL (Write-Ahead Log) en PostgreSQL con los parámetros (wal_level = replica, archive_mode = on, y archive_command), pierdes la capacidad de realizar dos funciones críticas para la gestión de bases de datos: Punto de Recuperación en el Tiempo (PITR) y Replicación de Streaming Asíncrona.
 
 ## Laboratorio 4.4 – Recuperación total desde respaldo físico completo
 
