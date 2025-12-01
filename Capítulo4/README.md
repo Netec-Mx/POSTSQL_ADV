@@ -192,25 +192,25 @@ Desde la cuenta inicial de login ejecutar el comando:
   ```
 2.	Eliminar o mover el directorio de datos actual (normalmente /var/lib/postgresql/14/main o según configuración):
 ```bash
-sudo mv /var/lib/postgresql/16/main /var/lib/postgresql/14/main_old
+sudo mv /var/lib/postgresql/16/main /var/lib/postgresql/16/main_old
 ```
 Crear el nuevo directorio donde sera restaurado el cluster.
 ```bash
-sudo mkdir /var/lib/postgresql/14/main
+sudo mkdir /var/lib/postgresql/16/main
 ```
 3.	Descomprimir y copiar el respaldo físico al directorio de datos:
 Supongamos que el respaldo está en /var/lib/postgresql/respaldos/base.tar.gz:
 ```bash
-sudo tar -xzf /var/lib/postgresql/respaldos/base.tar.gz -C /var/lib/postgresql/14/main
+sudo tar -xzf /var/lib/postgresql/respaldos/base.tar.gz -C /var/lib/postgresql/16/main
 ```
 Restaurar los archivos de WAL:
 ```bash
-sudo tar -xzf /var/lib/postgresql/respaldos/pg_wal.tar.gz -C /var/lib/postgresql/14/main/pg_wal
+sudo tar -xzf /var/lib/postgresql/respaldos/pg_wal.tar.gz -C /var/lib/postgresql/16/main/pg_wal
 ```
 4.	Ajustar los permisos y el propietario del directorio de datos para el usuario postgres:
 ```bash
-sudo chmod -R 700 /var/lib/postgresql/14/main
-sudo chown -R postgres:postgres /var/lib/postgresql/14/main
+sudo chmod -R 700 /var/lib/postgresql/16/main
+sudo chown -R postgres:postgres /var/lib/postgresql/16/main
 ```
 5.	Iniciar el servidor PostgreSQL:
 ```bash
@@ -227,7 +227,7 @@ psql -U postgres -d ventas
 ```
 7.	(Opcional) Limpiar respaldo antiguo si todo está correcto:
 ```bash
-sudo rm -rf /var/lib/postgresql/14/main_old
+sudo rm -rf /var/lib/postgresql/16/main_old
 ```
 ### Explicación
 La restauración desde un respaldo físico completo consiste en reemplazar la carpeta de datos con una copia exacta de los archivos del servidor en un estado consistente. Este método es rápido y confiable para recuperaciones totales, pero requiere que el servidor esté apagado durante la operación.
