@@ -115,6 +115,10 @@ Realizar un respaldo físico completo de PostgreSQL usando pg_basebackup y exami
       mkdir /var/lib/postgresql/archive
   ```
   - Editar el archivo /etc/postgresql/16/main/postgresql.conf con los siguientes parametros:
+  ```bash
+    sudo -i -u postgres
+    nano /etc/postgresql/16/main/postgresql.conf
+  ```
   ```
   wal_level = replica
   archive_mode = on
