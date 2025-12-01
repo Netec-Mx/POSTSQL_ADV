@@ -108,17 +108,19 @@ Realizar un respaldo físico completo de PostgreSQL usando pg_basebackup y exami
 - Espacio suficiente en disco para almacenar el respaldo.
 - Crea el directorio de `respaldos` desde el usuario postgres:
   ```bash
+      sudo -i -u postgres
+  
       mkdir /var/lib/postgresql/respaldos
   ```
 - Crear el directorio `archive` para almacenar los archivos de WALs:
   ```bash
       mkdir /var/lib/postgresql/archive
   ```
-  - Editar el archivo /etc/postgresql/16/main/postgresql.conf con los siguientes parametros:
+  - Editar el archivo /etc/postgresql/16/main/postgresql.conf:
   ```bash
-    sudo -i -u postgres
     nano /etc/postgresql/16/main/postgresql.conf
   ```
+  - Actualiza los siguientes parametros:
   ```
   wal_level = replica
   archive_mode = on
