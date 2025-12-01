@@ -146,14 +146,14 @@ Nota:
 ### Explicación
 El respaldo físico copia todos los archivos de datos y WAL necesarios para restaurar la base de datos en un estado consistente exacto al momento del respaldo.
 
-## Laboratorio 4.3 (Opcional)– Verificar la configuración de archivado WAL
+## Laboratorio 4.3 (Opcional, solo en caso de que no lo haya configurado)– Verificar la configuración de archivado WAL
 ### Objetivo
 Verificar la configuración del archivado de Write-Ahead Logs (WAL) para permitir recuperaciones basadas en logs.
 ### Requisitos
 - Acceso con permisos para modificar archivos de configuración.
 - Directorio seguro para almacenar WAL archivados.
 ### Pasos
-1.	Editar el archivo postgresql.conf (ubicación típica: /etc/postgresql/14/main/postgresql.conf):
+1.	Editar el archivo postgresql.conf (ubicación típica: /etc/postgresql/16/main/postgresql.conf):
 Desde la cuenta postgres, activar archivado WAL:
 ```bash
     sudo -i -u postgres
@@ -190,7 +190,7 @@ Desde la cuenta inicial de login ejecutar el comando:
   ```bash
    sudo systemctl stop postgresql
   ```
-2.	Eliminar o mover el directorio de datos actual (normalmente /var/lib/postgresql/14/main o según configuración):
+2.	Eliminar o mover el directorio de datos actual (normalmente /var/lib/postgresql/16/main o según configuración):
 ```bash
 sudo mv /var/lib/postgresql/16/main /var/lib/postgresql/16/main_old
 ```
