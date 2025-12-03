@@ -54,9 +54,9 @@ host replication replicador 127.0.0.1/32 md5
 ```
 
 ### Paso 5. Crear usuario de replicación (si no existe) y otorgar privilegios.
-Inicia el maestro en segundo plano:
+Reinicia el maestro en segundo plano:
 ```bash
-sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl -D /var/lib/postgresql/maestro -l maestro.log start 
+/usr/lib/postgresql/18/bin/pg_ctl -D /var/lib/postgresql/maestro -l maestro.log restart
 ```
 Crea el usuario replicador:
 ```bash
@@ -66,19 +66,19 @@ psql -p 5432 -U postgres
 CREATE ROLE replicador WITH REPLICATION LOGIN ENCRYPTED PASSWORD 'abc123';
 GRANT USAGE ON SCHEMA public TO replicador;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO replicador;
+\q
 ```
 
 ### Paso 6. Inicializar el esclavo con pg_basebackup
 
-Primero, detén el maestro si necesitas limpiar datos en el esclavo:
+Primero, verifica que el maestro sieste en ejecución:
 ```bash
-sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl -D /var/lib/postgresql/maestro stop
+/usr/lib/postgresql/18/bin/pg_ctl -D /var/lib/postgresql/maestro status
+pg_ctl: server is running (PID: 25876)
 ```
 Luego, ejecuta:
 ```bash
-sudo -u postgres /usr/lib/postgresql/16/bin/pg_basebackup 
-  -h 127.0.0.1 -p 5432 -D /var/lib/postgresql/esclavo 
-  -U replicador -Fp -Xs -P -R
+/usr/lib/postgresql/16/bin/pg_basebackup -h 127.0.0.1 -p 5432 -D /var/lib/postgresql/esclavo -U replicador -Fp -Xs -P -R
 ```
 Esto creará un archivo standby.signal automáticamente.
 
