@@ -84,7 +84,7 @@ Esto creará un archivo standby.signal automáticamente.
 
 ### Paso 7. Configurar el esclavo (postgresql.conf)
 ```bash
-sudo nano /var/lib/postgresql/esclavo/postgresql.conf
+nano /var/lib/postgresql/esclavo/postgresql.conf
 ```
 Asegúrate de tener:
 ```
@@ -92,10 +92,9 @@ port = 5433
 hot_standby = on
 ```
 
-### Paso 8. Iniciar maestro y esclavo
+### Paso 8. Iniciar el esclavo
 ```bash
-sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl -D /var/lib/postgresql/maestro -l maestro.log start
-sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl -D /var/lib/postgresql/esclavo -l esclavo.log start
+/usr/lib/postgresql/16/bin/pg_ctl -D /var/lib/postgresql/esclavo -l esclavo.log start
 ```
 
 ### Paso 9.  Verificar replicación
