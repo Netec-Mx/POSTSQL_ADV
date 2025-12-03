@@ -56,7 +56,7 @@ host replication replicador 127.0.0.1/32 md5
 ### Paso 5. Crear usuario de replicación (si no existe) y otorgar privilegios.
 Reinicia el maestro en segundo plano:
 ```bash
-/usr/lib/postgresql/18/bin/pg_ctl -D /var/lib/postgresql/maestro -l maestro.log restart
+/usr/lib/postgresql/16/bin/pg_ctl -D /var/lib/postgresql/maestro -l maestro.log restart
 ```
 Crea el usuario replicador:
 ```bash
@@ -73,7 +73,7 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO replicador;
 
 Primero, verifica que el maestro sieste en ejecución:
 ```bash
-/usr/lib/postgresql/18/bin/pg_ctl -D /var/lib/postgresql/maestro status
+/usr/lib/postgresql/16/bin/pg_ctl -D /var/lib/postgresql/maestro status
 pg_ctl: server is running (PID: 25876)
 ```
 Luego, ejecuta:
