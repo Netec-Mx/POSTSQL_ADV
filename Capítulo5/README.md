@@ -10,7 +10,7 @@
 ## Ejercicio 1. Configurar replicación maestro-esclavo local
 
 Requisitos:
--	PostgreSQL instalado (versión 13 o superior recomendada).
+-	PostgreSQL instalado (versión 14 o superior recomendada).
 -	Dos directorios para los datos:
 /var/lib/postgresql/maestro (puede ser el main de un cluster normal)
 /var/lib/postgresql/esclavo (podemos llamarle replica)
@@ -55,7 +55,7 @@ host replication replicador 127.0.0.1/32 md5
 ### Paso 5. Crear usuario de replicación (si no existe) y otorgar privilegios.
 Inicia el maestro en segundo plano:
 ```bash
-sudo -u postgres /usr/lib/postgresql/14/bin/pg_ctl -D /var/lib/postgresql/maestro -l maestro.log start 
+sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl -D /var/lib/postgresql/maestro -l maestro.log start 
 ```
 Crea el usuario replicador:
 ```bash
@@ -93,8 +93,8 @@ hot_standby = on
 
 ### Paso 8. Iniciar maestro y esclavo
 ```bash
-sudo -u postgres /usr/lib/postgresql/15/bin/pg_ctl -D /var/lib/postgresql/maestro -l maestro.log start
-sudo -u postgres /usr/lib/postgresql/15/bin/pg_ctl -D /var/lib/postgresql/esclavo -l esclavo.log start
+sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl -D /var/lib/postgresql/maestro -l maestro.log start
+sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl -D /var/lib/postgresql/esclavo -l esclavo.log start
 ```
 
 ### Paso 9.  Verificar replicación
@@ -111,11 +111,11 @@ Simular la caída del maestro y promover el esclavo a maestro.
 
 ### Paso 1. Detener el maestro
 ```bash
-sudo -u postgres /usr/lib/postgresql/15/bin/pg_ctl -D /var/lib/postgresql/maestro stop
+sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl -D /var/lib/postgresql/maestro stop
 ```
 ### Paso 2. Promover el esclavo
 ```bash
-sudo -u postgres /usr/lib/postgresql/15/bin/pg_ctl -D /var/lib/postgresql/esclavo promote
+sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl -D /var/lib/postgresql/esclavo promote
 ```
 ### Paso 3. Validar promoción
 Intenta conectarte y escribir en la réplica ahora promovida:
@@ -166,11 +166,11 @@ Configurar un entorno básico de replicación asíncrona entre un servidor prima
 3.	En el servidor secundario:
 o	Hacer una copia base usando pg_basebackup:
     ```bash
-    pg_basebackup -h IP_primario -D /var/lib/postgresql/14/main -U replicador -v -P --wal-method=stream
+    pg_basebackup -h IP_primario -D /var/lib/postgresql/16/main -U replicador -v -P --wal-method=stream
     ```
 - Crear archivo standby.signal en el directorio de datos para activar modo standby:
     ```bash
-    touch /var/lib/postgresql/14/main/standby.signal
+    touch /var/lib/postgresql/16/main/standby.signal
     ```
 - Configurar postgresql.conf en el secundario para conexión al primario:
     ```ini
@@ -200,7 +200,7 @@ Promover un servidor secundario en modo standby a servidor primario para recuper
     ```
 2.	Ejecutar el comando de promoción:
     ```bash
-    pg_ctl -D /var/lib/postgresql/14/main promote
+    pg_ctl -D /var/lib/postgresql/16/main promote
     ```
 3.	Verificar que el servidor ahora acepta conexiones y es primario:
     ```bash
@@ -251,7 +251,7 @@ Simular la caída del servidor primario y realizar el failover manual promoviend
     ```
 2.	Promover el servidor secundario:
     ```bash
-    pg_ctl -D /var/lib/postgresql/14/main promote
+    pg_ctl -D /var/lib/postgresql/16/main promote
     ```
 3.	Verificar que el secundario ahora es primario y acepta conexiones.
 4.	(Opcional) Reconfigurar el antiguo primario para que sea secundario una vez vuelva a estar en línea.
