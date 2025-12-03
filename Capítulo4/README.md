@@ -117,9 +117,9 @@ createdb mi_tienda
 1.2. Crear Tablas e Insertar Datos
 
 Conéctate a la base de datos y ejecuta los siguientes comandos SQL:
+- psql -d mi_tienda
+
 ```sql
-psql -d mi_tienda
-SQL
 -- Tabla Productos
 CREATE TABLE Productos (
     id_producto SERIAL PRIMARY KEY,
@@ -165,19 +165,29 @@ ________________________________________
 ```
 
 2. Respaldo Lógico de la Base de Datos con pg_dump
+
 Ahora, realiza el respaldo completo de la base de datos mi_tienda en un archivo llamado respaldo_completo.sql.
-Bash
+
+```bash
 pg_dump -U postgres -F c mi_tienda > respaldo_completo.dump
+```
+
 Nota: Utilizamos el formato personalizado (-F c) para mayor flexibilidad, aunque para la recuperación de una sola tabla, el formato texto también funciona. Usamos un archivo .dump en lugar de .sql para denotar el formato personalizado.
 ________________________________________
+
 3. Simular un Cambio (Punto de No Retorno)
+
 Para demostrar la recuperación, modificaremos la tabla Productos de forma indeseada.
 Conéctate a la base de datos y ejecuta lo siguiente:
-Bash
+
+```bash
 psql -d mi_tienda
-SQL
+```sql
+
 -- ⚠️ SIMULACIÓN DE ACCIDENTE/ERROR:
 -- Se agrega un nuevo producto con un precio incorrecto, o se borra un producto
+
+```sql
 INSERT INTO Productos (nombre, precio) VALUES
 ('Teclado Mecánico', 1.00); -- ¡El precio es claramente erróneo!
 
@@ -185,23 +195,39 @@ INSERT INTO Productos (nombre, precio) VALUES
 SELECT * FROM Productos;
 
 \q
+```
 ________________________________________
+
 4. Recuperación Selectiva de la Tabla Productos
+
 Para recuperar la tabla Productos al estado exacto del respaldo, puedes usar el comando pg_restore junto con el flag -t (o --table).
+
 4.1. Limpiar la Tabla Actual (Necesario para una Recuperación 'Tal Cual')
 Primero, debes eliminar la tabla Productos en la base de datos actual para que pg_restore pueda recrearla y cargar los datos desde el respaldo sin conflictos de claves primarias o datos.
-Bash
+
+```bash
 psql -d mi_tienda -c "DROP TABLE Productos CASCADE;"
+```
+
 Nota: El modificador CASCADE es crucial para eliminar las dependencias (como la referencia en la tabla Ventas). Después, el pg_restore recreará la tabla Productos y la rellenará, pero no recreará la dependencia en Ventas porque solo estamos restaurando una tabla. Si esto fuera una base de datos de producción, este paso sería muy delicado y se preferiría una restauración a una base de datos temporal.
+
 4.2. Restaurar la Tabla Productos
+
 Utiliza pg_restore para restaurar solo la definición y los datos de la tabla Productos desde el archivo de respaldo.
-Bash
+
+```bash
 pg_restore -U postgres -d mi_tienda -t Productos respaldo_completo.dump
+```
+
 4.3. Corregir la Dependencia (Opcional, pero necesario si usaste CASCADE)
+
 Como usamos CASCADE para eliminar la tabla, la referencia (Foreign Key) de Ventas a Productos se eliminó. Debemos recrearla.
-Bash
+
+```bash
 psql -d mi_tienda
-SQL
+```
+
+```sql
 -- Recrear la restricción de clave foránea
 ALTER TABLE Ventas
 ADD CONSTRAINT fk_ventas_producto
@@ -212,14 +238,17 @@ REFERENCES Productos(id_producto);
 SELECT * FROM Productos;
 
 \q
+```
+
 Resultado: La tabla Productos habrá regresado a su estado con los 3 registros originales (Laptop, Mouse Inalámbrico, Monitor 27"), ignorando el registro erróneo (Teclado Mecánico) que se insertó después del respaldo.
 ________________________________________
+
 📝 Resumen de Comandos Clave
-Acción	Comando Principal	Descripción
-Respaldo Lógico Completo	pg_dump	Crea un archivo de respaldo con el esquema y datos de toda la base.
-Recuperación Selectiva	pg_restore -t NombreTabla	Restaura el esquema y los datos solo para la tabla especificada.
 
-
+```
+Respaldo Lógico Completo:	pg_dump	Crea un archivo de respaldo con el esquema y datos de toda la base.
+Recuperación Selectiva:	pg_restore -t NombreTabla	Restaura el esquema y los datos solo para la tabla especificada.
+```
 
 ## Laboratorio 4.2 – Respaldo físico con pg_basebackup
 ### Objetivo
