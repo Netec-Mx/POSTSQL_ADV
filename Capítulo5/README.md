@@ -24,13 +24,14 @@ sudo chown -R postgres:postgres /var/lib/postgresql
 ```
 ### Paso 2. Inicializar el maestro
 ```bash
-sudo -u postgres /usr/lib/postgresql/16/bin/initdb -D /var/lib/postgresql/maestro
+sudo -i -u postgres
+/usr/lib/postgresql/16/bin/initdb -D /var/lib/postgresql/maestro
 ```
 
 ### Paso 3. Configurar el postgresql.conf del maestro
 Edíta el siguiente archivo:
 ```bash
-sudo nano /var/lib/postgresql/maestro/postgresql.conf
+nano /var/lib/postgresql/maestro/postgresql.conf
 ```
 Agrega o ajusta:
 ```
@@ -44,7 +45,7 @@ listen_addresses = '*'
 ### Paso 4. Configurar pg_hba.conf del maestro
 
 ```bash
-sudo nano /etc/postgresql/maestro/pg_hba.conf
+nano /var/lib/postgresql/maestro/pg_hba.conf
 ```
 
 Agrega:
