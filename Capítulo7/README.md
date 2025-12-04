@@ -17,7 +17,7 @@ Modificar parámetros clave de memoria y concurrencia para optimizar el rendimie
 
 ### Pasos
 
-1. Editar el archivo `postgresql.conf` (ubicación típica: `/etc/postgresql/14/main/postgresql.conf`).
+1. Editar el archivo `postgresql.conf` (ubicación típica: `/etc/postgresql/16/main/postgresql.conf`).
 
 2. Cambiar los parámetros siguientes para ajustar memoria y concurrencia:
 
@@ -61,7 +61,7 @@ Configurar logging detallado para monitorear consultas y analizar el comportamie
 3.	Realizar algunas consultas desde psql o aplicaciones conectadas.
 4.	Revisar los archivos de log generados en el directorio configurado:
     ```bash
-    tail -f /var/lib/postgresql/14/main/pg_log/postgresql-*.log
+    tail -f /var/lib/postgresql/16/main/pg_log/postgresql-*.log
     ```
 6.	Analizar los logs para identificar consultas y tiempos de ejecución.
 #### Explicación
