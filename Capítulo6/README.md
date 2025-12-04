@@ -49,7 +49,7 @@ Configurar el archivo pg_hba.conf para permitir conexiones remotas solo desde di
 - Acceso al servidor con permisos para modificar archivos de configuración.
 - Dirección IP autorizada para conexión remota.
 ### Pasos
-1.	Editar el archivo pg_hba.conf (ubicación típica: /etc/postgresql/14/main/pg_hba.conf):
+1.	Editar el archivo pg_hba.conf (ubicación típica: /etc/postgresql/16/main/pg_hba.conf):
 Añadir línea para permitir acceso remoto solo desde IP autorizada (ejemplo 192.168.1.100):
     ```nginx
     host    basededatos    all    192.168.1.100/32    md5
