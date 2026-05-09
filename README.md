@@ -4,7 +4,7 @@
 
 ## Plataforma de laboratorios
 
-Bienvenido a la **plataforma de laboratorios** del curso **PostgreSQL Advanced**. Aquí podrás explorar diferentes tecnologías a través de prácticas guiadas. ¡Desarrolla tus habilidades y lleva tus conocimientos al siguiente nivel!
+Bienvenido a la **plataforma de laboratorios** del curso **PostgreSQL Advanced**. Aquí podrás explorar diferentes tecnologías a través de prácticas guiadas. ¡Desarrolla tus habilidades y lleva tus conocimientos al siguiente nivel!.
 
 ## Lista de laboratorios
 
